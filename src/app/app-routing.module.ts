@@ -4,11 +4,17 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guards/authguard.guard';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
+import { RegisterPatientComponent } from './components/register-patient/register-patient.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterUserComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  {
+    path: 'register-patient',
+    component: RegisterPatientComponent,
+    canActivate: [AuthGuard],
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

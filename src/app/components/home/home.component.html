@@ -1,4 +1,89 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <p>home works!</p>
+    <div class="row mt-3 animated fadeIn">
+        <div class="col-md-10">
+            <form [formGroup]="searchForm">
+                <div class="row g-3">
+                    <div class="col-md-6 me-2">
+                        <input formControlName="search" type="search" class="form-control fs-5" id="search"
+                            placeholder="Escriba aquí para buscar...">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2 text-end">
+            <a type="button" class="btn btn-outline-primary fs-5" routerLink="/register-patient">
+                <i class="bi bi-plus-circle"></i> Agregar
+            </a>
+        </div>
+    </div>
+
+    <ng-template #loader>
+        <div class="loader-container fadeIn fast">
+            <app-loader></app-loader>
+        </div>
+    </ng-template>
+
+    <div class="main-container fadeIn fast mt-5" *ngIf="(patients$ | async) as patients else loader">
+        <div class="row animated  mx-5">
+            <!-- <div class="col" *ngIf="auth.user$ | async as profile">
+                        <h3>
+                            Panel Administrador - {{ profile.nickname | titlecase }} -
+                            {{ profile.email }}
+                        </h3>
+                    </div> -->
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Foto</th>
+                            <th>Nombre y Apellido</th>
+                            <th>DNI</th>
+                            <th>CUIL</th>
+                            <th>Última fecha de consulta</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor=" let patient of patients.patients; let i=index">
+                            <td class="fs-4">{{ i + 1 }}</td>
+                            <td>
+                                <img src="../../../assets/noimage.png" class="rounded" width="45" />
+                            </td>
+                            <td class="fs-4">{{ patient.firstName + ' ' + patient.lastName }}</td>
+                            <td class="fs-4">{{ patient.DNI }}</td>
+                            <td class="fs-4">{{ patient.CUIL }}</td>
+                            <td class="fs-4">
+                                01/01/2023
+                            </td>
+                            <!-- <td class="fs-4">
+                                            <label class="badge text-bg-success" *ngIf="clothe.isAvailable">Activo</label>
+                                            <label class="badge text-bg-danger" *ngIf="!clothe.isAvailable">Inactivo</label>
+                                        </td> -->
+                            <td>
+                                <a class="btn btn-md btn-outline-success fs-5 me-2"
+                                    [routerLink]="['odontogram', patient.uid]">
+                                    <i class="bi bi-file-earmark-medical"></i>
+                                </a>
+                                <a class="btn btn-md btn-outline-secondary fs-5 me-2"
+                                    [routerLink]="['patient', patient.uid]">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-md btn-outline-danger fs-5"
+                                    (click)="deletePatient(patient.firstName, patient.lastName, patient.uid)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+<app-footer></app-footer>

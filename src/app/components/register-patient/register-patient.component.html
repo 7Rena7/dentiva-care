@@ -1,0 +1,224 @@
+<div class="container">
+    <main>
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="../assets/logo.svg" alt="" width="300" height="100">
+            <h2>Crear Paciente</h2>
+        </div>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a routerLink="/home">Volver</a></li>
+        </ul>
+        <!-- 
+        <div class="loader-container" *ngIf="showLoader">
+            <app-loader></app-loader>
+        </div> -->
+
+        <div class="row g-5">
+            <div class="">
+                <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+                    <h4 class="mb-3">Datos Personales</h4>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="firstName" class="form-label">Nombres</label>
+                            <input formControlName="firstName" type="text" class="form-control" id="firstName"
+                                placeholder="" value="" required
+                                [ngClass]="{'is-invalid' : isFirstNameInvalid, 'is-valid' : isFirstNameValid}">
+                            <div class="invalid-feedback" *ngIf="isFirstNameInvalid">
+                                Nombre inválido (entre 2 y 50 caracteres, sin números ni caracteres especiales)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="lastName" class="form-label">Apellidos</label>
+                            <input formControlName="lastName" type="text" class="form-control" id="lastName"
+                                placeholder="" value="" required
+                                [ngClass]="{'is-invalid' : isLastNameInvalid, 'is-valid' : isLastNameValid}">
+                            <div class="invalid-feedback" *ngIf="isLastNameInvalid">
+                                Apellido inválido (entre 2 y 50 caracteres, sin números ni caracteres
+                                especiales)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input formControlName="dni" type="text" class="form-control" id="dni" placeholder=""
+                                value="" required [ngClass]="{'is-invalid' : isDniInvalid, 'is-valid' : isDniValid}">
+                            <div class="invalid-feedback" *ngIf="isDniInvalid">
+                                DNI inválido (entre 6 y 8 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="cuil" class="form-label">CUIL</label>
+                            <input formControlName="cuil" type="text" class="form-control" id="cuil" placeholder=""
+                                value="" required [ngClass]="{'is-invalid' : isCuilInvalid, 'is-valid' : isCuilValid}">
+                            <div class="invalid-feedback" *ngIf="isCuilInvalid">
+                                CUIL inválido (entre 9 y 11 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input formControlName="telephone" type="text" class="form-control" id="telefono"
+                                placeholder="" value="" required
+                                [ngClass]="{'is-invalid' : isTelephoneInvalid, 'is-valid' : isTelephoneValid}">
+                            <div class="invalid-feedback" *ngIf="isTelephoneInvalid">
+                                Teléfono inválido (entre 6 y 20 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="mb-2 mt-4">Domicilio</h4>
+
+                        <div class="col-md-6">
+                            <label for="province" class="form-label">Provincia</label>
+                            <select formControlName="province" class="form-select" id="province"
+                                [ngClass]="{'is-invalid' : isProvinceInvalid, 'is-valid' : isProvinceValid}"
+                                (change)="onProvinceSelected($event)">
+                                <option value="">Seleccione una opción...</option>
+                                <option *ngFor="let province of provinces$ | async; let i = index"
+                                    [value]="province.id">{{ province.nombre }}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="isProvinceInvalid">
+                                Seleccione una provincia
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">Ciudad</label>
+                            <select formControlName="city" class="form-select" id="city"
+                                [ngClass]="{'is-invalid' : isCityInvalid, 'is-valid': isCityValid}">
+                                <option value="">Seleccione una opción...</option>
+                                <option *ngFor="let city of cities$ | async">{{city.nombre}}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="isCityInvalid">
+                                Seleccione una ciudad
+                            </div>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <label for="street" class="form-label">Calle</label>
+                            <input formControlName="street" type="text" class="form-control" id="street" placeholder=""
+                                value="" [ngClass]="{'is-invalid' : isStreetInvalid, 'is-valid' : isStreetValid}">
+                            <div class="invalid-feedback" *ngIf="isStreetInvalid">
+                                Calle inválida (entre 2 y 50 caracteres)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="number" class="form-label">Número</label>
+                            <input formControlName="number" type="text" class="form-control" id="number" placeholder=""
+                                value="" [ngClass]="{'is-invalid' : isNumberInvalid, 'is-valid' : isNumberValid}">
+                            <div class="invalid-feedback" *ngIf="isNumberInvalid">
+                                Número inválido (entre 1 y 10 dígitos)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="department" class="form-label">Departamento</label>
+                            <input formControlName="department" type="text" class="form-control" id="department"
+                                placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isDepartmentInvalid, 'is-valid' : isDepartmentValid}">
+                            <div class="invalid-feedback" *ngIf="isDepartmentInvalid">
+                                Departamento inválido (entre 1 y 10 caracteres)
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="mb-2 mt-4">Obra Social</h4>
+
+                        <div class="col-sm-8">
+                            <label for="medicalService" class="form-label">Nombre</label>
+                            <input formControlName="medicalService" type="text" class="form-control" id="medicalService"
+                                placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isMedicalServiceInvalid, 'is-valid' : isMedicalServiceValid}">
+                            <div class="invalid-feedback" *ngIf="isMedicalServiceInvalid">
+                                Obra Social inválida (entre 2 y 50 caracteres)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label for="medicalServiceNumber" class="form-label">Número de Socio</label>
+                            <input formControlName="medicalServiceNumber" type="text" class="form-control"
+                                id="medicalServiceNumber" placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isMedicalServiceNumberInvalid, 'is-valid' : isMedicalServiceNumberValid}">
+                            <div class="invalid-feedback" *ngIf="isMedicalServiceNumberInvalid">
+                                Número de Socio inválido (entre 2 y 50 caracteres)
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="mb-2 mt-4">Enfermedades y Alergias</h4>
+
+                        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                            <input formControlName="alergies" type="checkbox" class="btn-check" id="alergies"
+                                autocomplete="off">
+                            <label class="btn btn-outline-warning" for="alergies">Alergias</label>
+
+                            <input formControlName="diabetes" type="checkbox" class="btn-check" id="diabetes"
+                                autocomplete="off">
+                            <label class="btn btn-outline-warning" for="diabetes">Diabetes</label>
+
+                            <input formControlName="neumaticFiber" type="checkbox" class="btn-check" id="neumaticFiber"
+                                autocomplete="off">
+                            <label class="btn btn-outline-warning" for="neumaticFiber">Fiébre
+                                Neumática</label>
+
+                            <input formControlName="epilepsy" type="checkbox" class="btn-check" id="epilepsy"
+                                autocomplete="off">
+                            <label class="btn btn-outline-warning" for="epilepsy">Epilepsia</label>
+
+                            <input formControlName="cardiopathy" type="checkbox" class="btn-check" id="cardiopathy"
+                                autocomplete="off">
+                            <label class="btn btn-outline-warning" for="cardiopathy">Cardiopatías</label>
+
+                            <input formControlName="hepatithis" type="checkbox" class="btn-check" id="hepatithis"
+                                autocomplete="off">
+                            <label class="btn btn-outline-warning" for="hepatithis">Hepatitis</label>
+
+                            <input formControlName="other" type="checkbox" class="btn-check" id="other"
+                                autocomplete="off">
+                            <label class="btn btn-outline-warning" for="other">Otra</label>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <label for="otherIllnesses" class="form-label">Otras enfermedades</label>
+                            <textarea formControlName="otherIllnesses" type="text" class="form-control"
+                                id="otherIllnesses" placeholder="" value="" style="resize: none;" rows="5"></textarea>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <label for="otherDetails" class="form-label">Otras particularidades</label>
+                            <textarea formControlName="otherDetails" type="text" class="form-control" id="otherDetails"
+                                placeholder="(medicamentos, dosis, alergias, ...)" value="" style="resize: none;"
+                                rows="5"></textarea>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <label for="generalApretiation" class="form-label">Apreciación General</label>
+                            <textarea formControlName="generalApretiation" type="text" class="form-control"
+                                id="generalApretiation" placeholder="" value="" style="resize: none;"
+                                rows="5"></textarea>
+                        </div>
+
+                    </div>
+
+                    <button class="w-100 btn btn-primary btn-lg mt-5" type="submit"
+                        [ngClass]="{'disabled': showLoader}">
+                        <span class="spinner-border spinner-border-md" *ngIf="showLoader"></span>
+                        <span *ngIf="!showLoader">Crear Usuario</span>
+                    </button>
+                    <ul class="list-inline text-center mt-3">
+                        <li class="list-inline-item"><a routerLink="/home">Volver</a></li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="my-5 pt-5 text-body-secondary text-center text-small">
+        <p class="mb-1">&copy; 2023 Dentiva Care</p>
+    </footer>
+</div>

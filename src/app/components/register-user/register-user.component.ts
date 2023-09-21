@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { confirmPasswordValidator } from './confirm-password.validator';
-import { RegisterService } from 'src/app/services/register.service';
+import { RegisterService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
@@ -48,10 +47,10 @@ export class RegisterUserComponent {
       Validators.maxLength(20),
       Validators.pattern('^[0-9]*$'),
     ]),
-    consultingRoomProvince: new FormControl('', [Validators.maxLength(30)]),
-    consultingRoomCity: new FormControl('', [Validators.maxLength(30)]),
+    consultingRoomProvince: new FormControl('', [Validators.maxLength(100)]),
+    consultingRoomCity: new FormControl('', [Validators.maxLength(100)]),
     consultingRoomPostalCode: new FormControl('', [Validators.maxLength(10)]),
-    consultingRoomStreet: new FormControl('', [Validators.maxLength(50)]),
+    consultingRoomStreet: new FormControl('', [Validators.maxLength(100)]),
     consultingRoomNumber: new FormControl('', [Validators.maxLength(10)]),
     consultingRoomDepartment: new FormControl('', [Validators.maxLength(10)]),
     email: new FormControl('', [
@@ -324,7 +323,6 @@ export class RegisterUserComponent {
   }
 
   registerUser() {
-    console.log(this.registerForm.controls.consultingRoomProvince);
     if (this.registerForm.invalid) {
       this.registerForm.controls.firstName.markAsDirty();
       this.registerForm.controls.lastName.markAsDirty();

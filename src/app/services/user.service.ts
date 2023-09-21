@@ -11,7 +11,6 @@ export class RegisterService {
   constructor(private http: HttpClient) {}
 
   registerUser(data: FormGroup): Observable<any> {
-    console.table(data.controls);
     const { controls } = data;
     const url = baseUrl + '/users';
 
