@@ -11,7 +11,7 @@ export class AuthGuard {
 
   canActivate(): Observable<boolean> {
     return this.login.isTokenValid().pipe(
-      map((valid) => {
+      map((valid: boolean) => {
         if (valid) {
           console.log('Token is valid');
           return true;

@@ -56,7 +56,7 @@ export class LoginComponent {
       (err) => {
         this.showLoader = false;
         let message = '';
-        if (err.errors) {
+        if (err.error) {
           const errors = err.error.errors;
           errors.forEach((error: any) => {
             message += `${error.msg}`;

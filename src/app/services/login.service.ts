@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { baseUrl } from '../../env/environment';
 import { Observable, catchError, map, of } from 'rxjs';
@@ -26,18 +26,16 @@ export class LoginService {
     const token = localStorage.getItem('token');
 
     if (token) {
-      const headers = new Headers().set('token', token);
+      const headers = new HttpHeaders().set('token', token);
 
-      return this.http.post<any>(`${baseUrl}/login/validate`, { headers }).pipe(
-        map((resp) => {
-          console.log(resp);
-          return resp.valid;
-        }),
-        catchError((err) => {
-          console.log(err);
-          return of(false);
-        })
-      );
+      return this.http
+        .post<any>(`${baseUrl}/login/validate`, {}, { headers })
+        .pipe(
+          map((resp) => {
+            console.log(resp);
+            return resp.valid;
+          })
+        );
     } else {
       return of(false);
     }
