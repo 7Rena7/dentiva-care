@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, catchError } from 'rxjs';
 import { LoginService } from 'src/app/services/login.service';
 import Swal from 'sweetalert2';
 
@@ -50,13 +49,13 @@ export class LoginComponent {
       (token) => {
         this.showLoader = false;
         localStorage.setItem('token', token);
-        console.log(token);
         this.route.navigate(['/home']);
       },
       (err) => {
+        console.log(err);
         this.showLoader = false;
         let message = '';
-        if (err.error) {
+        if (err.error.errors) {
           const errors = err.error.errors;
           errors.forEach((error: any) => {
             message += `${error.msg}`;
@@ -71,7 +70,6 @@ export class LoginComponent {
             'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
           text: `${message}`,
         });
-        console.log(err);
       }
     );
   }

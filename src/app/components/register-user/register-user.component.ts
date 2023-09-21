@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { confirmPasswordValidator } from './confirm-password.validator';
 import { RegisterService } from 'src/app/services/register.service';
@@ -282,9 +282,9 @@ export class RegisterUserComponent {
   }
   get isConfirmPasswordInvalid() {
     return (
-      this.confirmPassword?.dirty &&
-      this.confirmPassword?.invalid &&
-      this.confirmPassword?.touched &&
+      (this.confirmPassword?.dirty &&
+        this.confirmPassword?.invalid &&
+        this.confirmPassword?.touched) ||
       this.confirmPassword?.value !== this.password?.value
     );
   }

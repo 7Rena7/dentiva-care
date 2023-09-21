@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { baseUrl } from '../../env/environment';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
@@ -32,12 +32,16 @@ export class LoginService {
         .post<any>(`${baseUrl}/login/validate`, {}, { headers })
         .pipe(
           map((resp) => {
-            console.log(resp);
             return resp.valid;
           })
         );
     } else {
       return of(false);
     }
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    window.location.reload();
   }
 }
