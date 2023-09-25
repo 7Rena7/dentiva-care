@@ -1,5 +1,5 @@
 export type PatientsResponse = {
-  total: number;
+  totalCount: number;
   patients: Patient[];
 };
 

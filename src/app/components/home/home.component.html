@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
-<div class="container">
+<div class="container body">
     <div class="row mt-3 animated fadeIn">
-        <div class="col-md-10">
+        <div class="col-md-8">
             <form [formGroup]="searchForm">
                 <div class="row g-3">
                     <div class="col-md-6 me-2">
@@ -11,9 +11,9 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-2 text-end">
+        <div class="col-md-4 text-end">
             <a type="button" class="btn btn-outline-primary fs-5" routerLink="/register-patient">
-                <i class="bi bi-plus-circle"></i> Agregar
+                <i class="bi bi-plus-circle"></i> Crear Paciente
             </a>
         </div>
     </div>
@@ -24,66 +24,90 @@
         </div>
     </ng-template>
 
-    <div class="main-container fadeIn fast mt-5" *ngIf="(patients$ | async) as patients else loader">
-        <div class="row animated  mx-5">
-            <!-- <div class="col" *ngIf="auth.user$ | async as profile">
-                        <h3>
-                            Panel Administrador - {{ profile.nickname | titlecase }} -
-                            {{ profile.email }}
-                        </h3>
-                    </div> -->
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Foto</th>
-                            <th>Nombre y Apellido</th>
-                            <th>DNI</th>
-                            <th>CUIL</th>
-                            <th>Última fecha de consulta</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr *ngFor=" let patient of patients.patients; let i=index">
-                            <td class="fs-4">{{ i + 1 }}</td>
-                            <td>
-                                <img src="../../../assets/noimage.png" class="rounded" width="45" />
-                            </td>
-                            <td class="fs-4">{{ patient.firstName + ' ' + patient.lastName }}</td>
-                            <td class="fs-4">{{ patient.DNI }}</td>
-                            <td class="fs-4">{{ patient.CUIL }}</td>
-                            <td class="fs-4">
-                                01/01/2023
-                            </td>
-                            <!-- <td class="fs-4">
-                                            <label class="badge text-bg-success" *ngIf="clothe.isAvailable">Activo</label>
-                                            <label class="badge text-bg-danger" *ngIf="!clothe.isAvailable">Inactivo</label>
-                                        </td> -->
-                            <td>
-                                <a class="btn btn-md btn-outline-success fs-5 me-2"
-                                    [routerLink]="['odontogram', patient.uid]">
-                                    <i class="bi bi-file-earmark-medical"></i>
-                                </a>
-                                <a class="btn btn-md btn-outline-secondary fs-5 me-2"
-                                    [routerLink]="['patient', patient.uid]">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <button class="btn btn-md btn-outline-danger fs-5"
-                                    (click)="deletePatient(patient.firstName, patient.lastName, patient.uid)">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <ng-template #noPatients>
+        <div class="d-flex justify-content-center align-items-center flex-column fadeIn fast">
+            <div class="row pt-4">
+                <div class="col-md-12">
+                    <img src="../../../assets/not-found-copy.png" class="rounded" width="400" />
+                </div>
+            </div>
+            <div class="row pt-4">
+                <div class="col-md-12 text-center">
+                    <h5>No se han encontrado pacientes</h5>
+                </div>
+            </div>
+            <div class="row pt-4">
+                <a type="button" class="btn btn-outline-primary fs-5 col-md-12" routerLink="/register-patient">
+                    <i class="bi bi-plus-circle"></i> Crear Paciente
+                </a>
             </div>
         </div>
+    </ng-template>
+
+    <div class="main-container fadeIn fast mt-5">
+        <ng-container *ngIf="(patients$ | async) as patients; else loader">
+            <ng-container *ngIf="patients.totalCount > 0; else noPatients">
+                <div class="row animated  mx-5">
+                    <!-- <div class="col" *ngIf="auth.user$ | async as profile">
+                                <h3>
+                                    Panel Administrador - {{ profile.nickname | titlecase }} -
+                                    {{ profile.email }}
+                                </h3>
+                            </div> -->
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Foto</th>
+                                    <th>Nombre y Apellido</th>
+                                    <th class="text-center">DNI</th>
+                                    <th class="text-center">CUIL</th>
+                                    <th class="text-center">Última fecha de consulta</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor=" let patient of patients.patients; let i=index">
+                                    <td class="fs-4">{{ i + 1 }}</td>
+                                    <td>
+                                        <img src="../../../assets/noimage.png" class="rounded" width="45" />
+                                    </td>
+                                    <td class="fs-4">{{ patient.firstName + ' ' + patient.lastName }}</td>
+                                    <td class="fs-4 text-center">{{ patient.DNI }}</td>
+                                    <td class="fs-4 text-center">{{ patient.CUIL }}</td>
+                                    <td class="fs-4 text-center">
+                                        01/01/2023
+                                    </td>
+                                    <!-- <td class="fs-4">
+                                                    <label class="badge text-bg-success" *ngIf="clothe.isAvailable">Activo</label>
+                                                    <label class="badge text-bg-danger" *ngIf="!clothe.isAvailable">Inactivo</label>
+                                                </td> -->
+                                    <td>
+                                        <a class="btn btn-md btn-outline-success fs-5 me-2"
+                                            [routerLink]="['odontogram', patient.uid]">
+                                            <i class="bi bi-file-earmark-medical"></i>
+                                        </a>
+                                        <a class="btn btn-md btn-outline-secondary fs-5 me-2"
+                                            [routerLink]="['patient', patient.uid]">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button class="btn btn-md btn-outline-danger fs-5"
+                                            (click)="deletePatient(patient.firstName, patient.lastName, patient.uid)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
     </div>
 </div>
-<app-footer></app-footer>
+<app-footer class="footer"></app-footer>

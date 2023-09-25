@@ -6,36 +6,20 @@ import { Observable, map } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard {
+export class RestorePasswordGuard {
   constructor(private login: LoginService, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    const token = localStorage.getItem('token') || '';
-    return this.login.isTokenValid(token).pipe(
-      map((valid: boolean) => {
-        if (valid) {
-          console.log('Token is valid');
-          return true;
-        } else {
-          this.router.navigate(['/login']);
-          console.log('Token is not valid');
-          return false;
-        }
-      })
-    );
-  }
-
-  restorePassword(): Observable<boolean> {
     const token = localStorage.getItem('restoreToken') || '';
     return this.login.isTokenValid(token).pipe(
       map((valid: boolean) => {
         if (valid) {
           console.log('Recover Token is valid');
-          return false;
+          return true;
         } else {
           this.router.navigate(['/login']);
           console.log('Recover Token is not valid');
-          return true;
+          return false;
         }
       })
     );
