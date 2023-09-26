@@ -1,0 +1,24 @@
+<main class="form-signin w-100 m-auto mt-5">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <img src="../assets/logo.svg" alt="" width="250" height="100">
+    <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
+
+    <div class="form-floating pb-1">
+      <input formControlName="email" type="email" class="form-control" id="floatingInput" placeholder="tu@email.com"
+        [ngClass]="{'is-invalid': isEmailInvalid}">
+      <label for="floatingInput">Correo electrónico</label>
+    </div>
+    <div class="form-floating">
+      <input formControlName="password" type="password" class="form-control" id="floatingPassword"
+        placeholder="contraseña" [ngClass]="{'is-invalid': isPasswordInvalid}">
+      <label for="floatingPassword">Contraseña</label>
+    </div>
+    <button class="w-100 btn btn-primary btn-lg " type="submit" [ngClass]="{'disabled': showLoader}">
+      <span class="spinner-border spinner-border-md" *ngIf="showLoader"></span>
+      <span *ngIf="!showLoader">Iniciar Sesion</span>
+    </button>
+    <p class="mt-3 mb-1 text-body-secondary"><a routerLink="/register">Crea tu cuenta</a></p>
+    <p class="mt-3 mb-1 text-body-secondary"><a routerLink="/recover-password">Recupera tu contraseña</a></p>
+    <p class="mt-3 mb-3 text-body-secondary">&copy; 2023 Dentiva Care</p>
+  </form>
+</main>

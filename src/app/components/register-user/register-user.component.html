@@ -1,0 +1,203 @@
+<div class="container">
+    <main>
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="../assets/logo.svg" alt="" width="300" height="100">
+            <h2>Crear Usuario</h2>
+        </div>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a routerLink="/login">Volver</a></li>
+        </ul>
+        <!-- 
+        <div class="loader-container" *ngIf="showLoader">
+            <app-loader></app-loader>
+        </div> -->
+
+        <div class="row g-5">
+            <div class="">
+                <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+                    <h4 class="mb-3">Datos Personales</h4>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="firstName" class="form-label">Nombres</label>
+                            <input formControlName="firstName" type="text" class="form-control" id="firstName"
+                                placeholder="" value="" required
+                                [ngClass]="{'is-invalid' : isFirstNameInvalid, 'is-valid' : isFirstNameValid}">
+                            <div class="invalid-feedback" *ngIf="isFirstNameInvalid">
+                                Nombre inválido (entre 2 y 50 caracteres, sin números ni caracteres especiales)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="lastName" class="form-label">Apellidos</label>
+                            <input formControlName="lastName" type="text" class="form-control" id="lastName"
+                                placeholder="" value="" required
+                                [ngClass]="{'is-invalid' : isLastNameInvalid, 'is-valid' : isLastNameValid}">
+                            <div class="invalid-feedback" *ngIf="isLastNameInvalid">
+                                Apellido inválido (entre 2 y 50 caracteres, sin números ni caracteres
+                                especiales)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input formControlName="dni" type="text" class="form-control" id="dni" placeholder=""
+                                value="" required [ngClass]="{'is-invalid' : isDniInvalid, 'is-valid' : isDniValid}">
+                            <div class="invalid-feedback" *ngIf="isDniInvalid">
+                                DNI inválido (entre 6 y 8 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="cuil" class="form-label">CUIL</label>
+                            <input formControlName="cuil" type="text" class="form-control" id="cuil" placeholder=""
+                                value="" required [ngClass]="{'is-invalid' : isCuilInvalid, 'is-valid' : isCuilValid}">
+                            <div class="invalid-feedback" *ngIf="isCuilInvalid">
+                                CUIL inválido (entre 9 y 11 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input formControlName="telephone" type="text" class="form-control" id="telefono"
+                                placeholder="" value="" required
+                                [ngClass]="{'is-invalid' : isTelephoneInvalid, 'is-valid' : isTelephoneValid}">
+                            <div class="invalid-feedback" *ngIf="isTelephoneInvalid">
+                                Teléfono inválido (entre 6 y 20 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="mb-2 mt-4">Datos del consultorio <span class="text-body-secondary"> (Opcional)</span>
+                        </h4>
+                        <div class="col-sm-6">
+                            <label for="consulting-room-name" class="form-label">Nombre del consultorio</label>
+                            <input formControlName="consultingRoomName" type="text" class="form-control"
+                                id="consulting-room-name" placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isConsultingRoomNameInvalid, 'is-valid' : isConsultingRoomNameValid}">
+                            <div class="invalid-feedback" *ngIf="isConsultingRoomNameInvalid">
+                                Nombre inválido (entre 2 y 50 caracteres)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="consulting-room-telephone" class="form-label">Teléfono</label>
+                            <input formControlName="consultingRoomTelephone" type="text" class="form-control"
+                                id="consulting-room-telephone" placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isConsultingRoomTelephoneInvalid, 'is-valid' : isConsultingRoomTelephoneValid}">
+                            <div class="invalid-feedback" *ngIf="isConsultingRoomTelephoneInvalid">
+                                Teléfono inválido (entre 6 y 20 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <label for="consulting-room-province" class="form-label">Provincia</label>
+                            <select formControlName="consultingRoomProvince" class="form-select"
+                                id="consulting-room-province" [ngClass]="{'is-valid' : isConsultingRoomProvinceValid}"
+                                (change)="onProvinceSelected($event)">
+                                <option value="">Seleccione una opción...</option>
+                                <option *ngFor="let province of provinces$ | async; let i = index"
+                                    [value]="province.id">{{ province.nombre }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-5">
+                            <label for="consulting-room-city" class="form-label">Ciudad</label>
+                            <select formControlName="consultingRoomCity" class="form-select" id="consulting-room-city"
+                                [ngClass]="{'is-valid': isConsultingRoomCityValid}">
+                                <option value="">Seleccione una opción...</option>
+                                <option *ngFor="let city of cities$ | async">{{city.nombre}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="consulting-room-zip" class="form-label">Código Postal</label>
+                            <input formControlName="consultingRoomPostalCode" type="text" class="form-control"
+                                id="consulting-room-zip" placeholder=""
+                                [ngClass]="{'is-invalid' : isConsultingRoomPostalCodeInvalid, 'is-valid' : isConsultingRoomPostalCodeValid}">
+                            <div class="invalid-feedback" *ngIf="isConsultingRoomPostalCodeInvalid">
+                                Código postal inválido (entre 2 y 10 caracteres)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <label for="consulting-room-street" class="form-label">Calle</label>
+                            <input formControlName="consultingRoomStreet" type="text" class="form-control"
+                                id="consulting-room-street" placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isConsultingRoomStreetInvalid, 'is-valid' : isConsultingRoomStreetValid}">
+                            <div class="invalid-feedback" *ngIf="isConsultingRoomStreetInvalid">
+                                Calle inválida (entre 2 y 50 caracteres)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="consulting-room-number" class="form-label">Número</label>
+                            <input formControlName="consultingRoomNumber" type="text" class="form-control"
+                                id="consulting-room-number" placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isConsultingRoomNumberInvalid, 'is-valid' : isConsultingRoomNumberValid}">
+                            <div class="invalid-feedback" *ngIf="isConsultingRoomNumberInvalid">
+                                Número inválido (entre 1 y 10 dígitos)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="consulting-room-department" class="form-label">Departamento</label>
+                            <input formControlName="consultingRoomDepartment" type="text" class="form-control"
+                                id="consulting-room-department" placeholder="" value=""
+                                [ngClass]="{'is-invalid' : isConsultingRoomDepartmentInvalid, 'is-valid' : isConsultingRoomDepartmentValid}">
+                            <div class="invalid-feedback" *ngIf="isConsultingRoomDepartmentInvalid">
+                                Departamento inválido (entre 1 y 10 caracteres)
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="col-sm-6">
+                            <label for="email" class="form-label">Email
+                            </label>
+                            <input formControlName="email" type="email" class="form-control" id="email" required
+                                placeholder="tu@email.com"
+                                [ngClass]="{'is-invalid' : isEmailInvalid, 'is-valid' : isEmailValid}">
+                            <div class="invalid-feedback" *ngIf="isEmailInvalid">
+                                Email inválido (debe contener un @ y un .)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input formControlName="password" type="password" class="form-control" id="password"
+                                placeholder="********" required
+                                [ngClass]="{'is-invalid' : isPasswordInvalid, 'is-valid' : isPasswordValid}">
+                            <div class="invalid-feedback" *ngIf="isPasswordInvalid">
+                                Contraseña inválida (al menos 8 caracteres)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="confirm-password" class="form-label">Confirmar Contraseña</label>
+                            <input formControlName="confirmPassword" type="password" class="form-control"
+                                id="confirm-password" placeholder="********" required
+                                [ngClass]="{'is-invalid' : isConfirmPasswordInvalid, 'is-valid' : isConfirmPasswordValid}">
+                            <div class="invalid-feedback" *ngIf="isConfirmPasswordInvalid">
+                                Las contraseñas no coinciden
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-100 btn btn-primary btn-lg mt-5" type="submit"
+                        [ngClass]="{'disabled': showLoader}">
+                        <span class="spinner-border spinner-border-md" *ngIf="showLoader"></span>
+                        <span *ngIf="!showLoader">Registrarse</span>
+                    </button>
+                    <ul class="list-inline text-center mt-3">
+                        <li class="list-inline-item"><a routerLink="/login">Volver</a></li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="my-5 pt-5 text-body-secondary text-center text-small">
+        <p class="mb-1">&copy; 2023 Dentiva Care</p>
+    </footer>
+</div>
