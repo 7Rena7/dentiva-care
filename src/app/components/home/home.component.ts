@@ -57,7 +57,8 @@ export class HomeComponent {
           icon: 'info',
           allowOutsideClick: false,
         });
-        Swal.showLoading(Swal.getConfirmButton());
+        const btn = Swal.getConfirmButton() || undefined;
+        Swal.showLoading(btn);
         this.patients.deletePatient(uid).subscribe(() => {
           Swal.fire('Paciente borrado!', '', 'success');
           this.patients$ = this.patients.getPatients('');
