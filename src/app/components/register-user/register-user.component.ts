@@ -341,6 +341,14 @@ export class RegisterUserComponent {
       this.registerForm.controls.password.markAsDirty();
       this.registerForm.controls.confirmPassword.markAsDirty();
       this.registerForm.markAllAsTouched();
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title:
+          'Revise los campos del formulario, hay campos obligatorios sin completar',
+        showConfirmButton: false,
+        timer: 2000,
+      });
       return;
     }
 

@@ -26,7 +26,12 @@ const routes: Routes = [
   { path: 'register', component: RegisterUserComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   {
-    path: 'register-patient',
+    path: 'patient',
+    component: RegisterPatientComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'patient/:id',
     component: RegisterPatientComponent,
     canActivate: [AuthGuard],
   },

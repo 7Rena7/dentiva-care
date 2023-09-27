@@ -9,18 +9,31 @@ export type Patient = {
   email: string;
   telephone: string;
   address: Address;
-  DOB: string;
-  DNI: string;
-  CUIL: string;
+  dob: string;
+  dni: string;
+  cuil: string;
+  medicalService: string;
+  medicalServiceNumber: string;
+  alergies: boolean;
+  diabetes: boolean;
+  reumaticFiber: boolean;
+  epilepsy: boolean;
+  cardiopathy: boolean;
+  hepatithis: boolean;
+  other: boolean;
+  otherIllnesses: string;
+  otherDetails: string;
+  generalApretiation: string;
   status: boolean;
   createdBy: string;
   uid: string;
 };
 
 export type Address = {
+  province: string;
   street: string;
-  number: number;
-  apartment: string;
+  number: string;
+  department: string;
   city: string;
   postalCode: string;
   status: boolean;

@@ -68,14 +68,14 @@ export class RestorePasswordComponent {
         () => {
           this.showLoader = false;
           Swal.fire({
+            position: 'top-end',
             icon: 'success',
             title:
               'Se ha cambiado su contraseña, ahora puede iniciar sesión con su nueva contraseña',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.route.navigate(['/login']);
-            }
+            showConfirmButton: false,
+            timer: 2500,
           });
+          this.route.navigate(['/login']);
         },
         (err) => {
           console.log(err);

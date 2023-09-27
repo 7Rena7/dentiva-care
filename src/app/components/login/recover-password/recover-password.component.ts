@@ -39,14 +39,14 @@ export class RecoverPasswordComponent {
         this.showLoader = false;
         localStorage.setItem('restoreToken', token);
         Swal.fire({
+          position: 'top-end',
           icon: 'success',
           title:
             'Se ha enviado un correo electrónico con las instrucciones para recuperar su contraseña',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.route.navigate(['/login']);
-          }
+          showConfirmButton: false,
+          timer: 2500,
         });
+        this.route.navigate(['/login']);
       },
       (err) => {
         console.log(err);

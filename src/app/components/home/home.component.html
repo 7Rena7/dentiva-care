@@ -12,7 +12,7 @@
             </form>
         </div>
         <div class="col-md-4 text-end">
-            <a type="button" class="btn btn-outline-primary fs-5" routerLink="/register-patient">
+            <a type="button" class="btn btn-outline-primary fs-5" routerLink="/patient">
                 <i class="bi bi-plus-circle"></i> Crear Paciente
             </a>
         </div>
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="row pt-4">
-                <a type="button" class="btn btn-outline-primary fs-5 col-md-12" routerLink="/register-patient">
+                <a type="button" class="btn btn-outline-primary fs-5 col-md-12" routerLink="/patient">
                     <i class="bi bi-plus-circle"></i> Crear Paciente
                 </a>
             </div>
@@ -78,8 +78,8 @@
                                         <img src="../../../assets/noimage.png" class="rounded" width="45" />
                                     </td>
                                     <td class="fs-4">{{ patient.firstName + ' ' + patient.lastName }}</td>
-                                    <td class="fs-4 text-center">{{ patient.DNI }}</td>
-                                    <td class="fs-4 text-center">{{ patient.CUIL }}</td>
+                                    <td class="fs-4 text-center">{{ patient.dni }}</td>
+                                    <td class="fs-4 text-center">{{ patient.cuil }}</td>
                                     <td class="fs-4 text-center">
                                         01/01/2023
                                     </td>
@@ -89,11 +89,11 @@
                                                 </td> -->
                                     <td>
                                         <a class="btn btn-md btn-outline-success fs-5 me-2"
-                                            [routerLink]="['odontogram', patient.uid]">
+                                            [routerLink]="['..', 'odontogram', patient.uid]">
                                             <i class="bi bi-file-earmark-medical"></i>
                                         </a>
                                         <a class="btn btn-md btn-outline-secondary fs-5 me-2"
-                                            [routerLink]="['patient', patient.uid]">
+                                            [routerLink]="['..', 'patient', patient.uid]">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button class="btn btn-md btn-outline-danger fs-5"

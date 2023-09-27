@@ -1,8 +1,11 @@
-<div class="container">
+<div class="container animated fadeIn">
     <main>
         <div class="py-5 text-center">
             <img class="d-block mx-auto mb-4" src="../assets/logo.svg" alt="" width="300" height="100">
-            <h2>Crear Paciente</h2>
+            <h2 *ngIf="!editingExistingPatient; else editTitle">Crear Paciente</h2>
+            <ng-template #editTitle>
+                <h2>Editar Paciente</h2>
+            </ng-template>
         </div>
         <ul class="list-inline">
             <li class="list-inline-item"><a routerLink="/home">Volver</a></li>
@@ -53,6 +56,15 @@
                                 value="" required [ngClass]="{'is-invalid' : isCuilInvalid, 'is-valid' : isCuilValid}">
                             <div class="invalid-feedback" *ngIf="isCuilInvalid">
                                 CUIL inválido (entre 9 y 11 digitos, sólo números)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="dob" class="form-label">Fecha de Nacimiento</label>
+                            <input formControlName="dob" type="date" class="form-control" id="dob" placeholder=""
+                                value="" required [ngClass]="{'is-invalid' : isDobInvalid, 'is-valid' : isDobValid}">
+                            <div class="invalid-feedback" *ngIf="isDobInvalid">
+                                Seleccione una fecha
                             </div>
                         </div>
 
@@ -161,9 +173,9 @@
                                 autocomplete="off">
                             <label class="btn btn-outline-warning" for="diabetes">Diabetes</label>
 
-                            <input formControlName="neumaticFiber" type="checkbox" class="btn-check" id="neumaticFiber"
+                            <input formControlName="reumaticFiber" type="checkbox" class="btn-check" id="reumaticFiber"
                                 autocomplete="off">
-                            <label class="btn btn-outline-warning" for="neumaticFiber">Fiebre
+                            <label class="btn btn-outline-warning" for="reumaticFiber">Fiebre
                                 Reumática</label>
 
                             <input formControlName="epilepsy" type="checkbox" class="btn-check" id="epilepsy"
@@ -208,7 +220,12 @@
                     <button class="w-100 btn btn-primary btn-lg mt-5" type="submit"
                         [ngClass]="{'disabled': showLoader}">
                         <span class="spinner-border spinner-border-md" *ngIf="showLoader"></span>
-                        <span *ngIf="!showLoader">Crear Paciente</span>
+                        <div *ngIf="!showLoader">
+                            <span *ngIf="!editingExistingPatient; else editButtonText">Crear Paciente</span>
+                            <ng-template #editButtonText>
+                                <span>Editar Paciente</span>
+                            </ng-template>
+                        </div>
                     </button>
                     <ul class="list-inline text-center mt-3">
                         <li class="list-inline-item"><a routerLink="/home">Volver</a></li>

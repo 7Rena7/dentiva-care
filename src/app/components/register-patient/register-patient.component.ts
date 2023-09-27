@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
 import { PatientsService } from 'src/app/services/patients.service';
 import { RegisterService } from 'src/app/services/user.service';
@@ -81,7 +81,7 @@ export class RegisterPatientComponent {
     ]),
     alergies: new FormControl(false, []),
     diabetes: new FormControl(false, []),
-    neumaticFiber: new FormControl(false, []),
+    reumaticFiber: new FormControl(false, []),
     epilepsy: new FormControl(false, []),
     cardiopathy: new FormControl(false, []),
     hepatithis: new FormControl(false, []),
@@ -140,8 +140,16 @@ export class RegisterPatientComponent {
   get dob() {
     return this.registerForm.get('dob');
   }
+  get dobValue() {
+    return this.dob?.value || '';
+  }
   get isDobInvalid() {
-    return this.dob?.dirty && this.dob?.invalid && this.dob?.touched;
+    return (
+      this.dob?.dirty &&
+      this.dob?.invalid &&
+      this.dob?.touched &&
+      this.dobValue > new Date().toString()
+    );
   }
   get isDobValid() {
     return this.dob?.valid;
@@ -239,11 +247,11 @@ export class RegisterPatientComponent {
       this.medicalServiceNumber?.dirty &&
       this.medicalServiceNumber?.invalid &&
       this.medicalServiceNumber?.touched &&
-      this.medicalServiceNumber?.value !== ''
+      this.medicalServiceNumber?.value === ''
     );
   }
   get isMedicalServiceNumberValid() {
-    return this.medicalServiceNumber?.valid;
+    return this.medicalServiceNumber?.valid && this.medicalServiceNumber?.value;
   }
 
   get alergies() {
@@ -254,8 +262,8 @@ export class RegisterPatientComponent {
     return this.registerForm.get('diabetes');
   }
 
-  get neumaticFiber() {
-    return this.registerForm.get('neumaticFiber');
+  get reumaticFiber() {
+    return this.registerForm.get('reumaticFiber');
   }
 
   get epilepsy() {
@@ -291,12 +299,67 @@ export class RegisterPatientComponent {
   selectedProvinceName: string = '';
   provinces$: Observable<any[]>;
   cities$: Observable<any[]> | undefined;
+  editingExistingPatient = false;
 
   constructor(
-    public patients: PatientsService,
-    public register: RegisterService,
-    public route: Router
+    private patients: PatientsService,
+    private register: RegisterService,
+    private route: Router,
+    private activatedRoute: ActivatedRoute
   ) {
+    this.activatedRoute.params.subscribe((params) => {
+      if (params['id']) {
+        this.editingExistingPatient = true;
+        this.patients.getPatientById(params['id']).subscribe((patient) => {
+          this.registerForm.controls.firstName.setValue(patient.firstName);
+          this.registerForm.controls.lastName.setValue(patient.lastName);
+          this.registerForm.controls.dni.setValue(patient.dni);
+          this.registerForm.controls.cuil.setValue(patient.cuil);
+          const dobDate = new Date(patient.dob);
+          const year = dobDate.getFullYear();
+          const month = (dobDate.getMonth() + 1).toString().padStart(2, '0');
+          const day = dobDate.getDate().toString().padStart(2, '0');
+          const formattedDate = month + '/' + day + '/' + year;
+          console.log(formattedDate);
+          this.registerForm.controls.dob.patchValue(formattedDate);
+          this.registerForm.controls.telephone.setValue(patient.telephone);
+          this.registerForm.controls.province.setValue(
+            patient.address.province
+          );
+          this.registerForm.controls.city.setValue(patient.address.city);
+          this.registerForm.controls.street.setValue(patient.address.street);
+          this.registerForm.controls.number.setValue(patient.address.number);
+          this.registerForm.controls.department.setValue(
+            patient.address.department
+          );
+          this.registerForm.controls.medicalService.setValue(
+            patient.medicalService
+          );
+          this.registerForm.controls.medicalServiceNumber.setValue(
+            patient.medicalServiceNumber
+          );
+          this.registerForm.controls.alergies.setValue(patient.alergies);
+          this.registerForm.controls.diabetes.setValue(patient.diabetes);
+          this.registerForm.controls.reumaticFiber.setValue(
+            patient.reumaticFiber
+          );
+          this.registerForm.controls.epilepsy.setValue(patient.epilepsy);
+          this.registerForm.controls.cardiopathy.setValue(patient.cardiopathy);
+          this.registerForm.controls.hepatithis.setValue(patient.hepatithis);
+          this.registerForm.controls.other.setValue(patient.other);
+          this.registerForm.controls.otherIllnesses.setValue(
+            patient.otherIllnesses
+          );
+          this.registerForm.controls.otherDetails.setValue(
+            patient.otherDetails
+          );
+          this.registerForm.controls.generalApretiation.setValue(
+            patient.generalApretiation
+          );
+        });
+      }
+    });
+
     this.provinces$ = this.register.getProvinces().pipe(
       catchError((error) => {
         console.error(error);
@@ -333,6 +396,14 @@ export class RegisterPatientComponent {
       this.registerForm.controls.department.markAsDirty();
       this.registerForm.controls.medicalService.markAsDirty();
       this.registerForm.markAllAsTouched();
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title:
+          'Revise los campos del formulario, hay campos obligatorios sin completar',
+        showConfirmButton: false,
+        timer: 2500,
+      });
       return;
     }
 
@@ -343,13 +414,14 @@ export class RegisterPatientComponent {
     this.patients.registerPatient(this.registerForm).subscribe(
       () => {
         this.showLoader = false;
-        Swal.fire({ icon: 'success', title: 'Usuario Creado' }).then(
-          (result) => {
-            if (result.isConfirmed) {
-              this.route.navigate(['/login']);
-            }
-          }
-        );
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Paciente creado con éxito',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.route.navigate(['/home']);
       },
       (err: any) => {
         this.showLoader = false;
