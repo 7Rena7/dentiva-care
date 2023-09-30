@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
   templateUrl: './register-patient.component.html',
   styleUrls: ['./register-patient.component.css'],
 })
-export class RegisterPatientComponent {
+export class RegisterPatientComponent implements OnInit {
   registerForm = new FormGroup({
     firstName: new FormControl('', [
       Validators.required,
@@ -295,11 +295,12 @@ export class RegisterPatientComponent {
   }
 
   showLoader = false;
+  patientInfoLoading = false;
   selectedProvinceId: string = '';
   selectedProvinceName: string = '';
-  provinces$: Observable<any[]>;
+  provinces$: Observable<any[]> | undefined;
   cities$: Observable<any[]> | undefined;
-  editingExistingPatient = false;
+  patientId = '';
 
   constructor(
     private patients: PatientsService,
@@ -309,63 +310,78 @@ export class RegisterPatientComponent {
   ) {
     this.activatedRoute.params.subscribe((params) => {
       if (params['id']) {
-        this.editingExistingPatient = true;
-        this.patients.getPatientById(params['id']).subscribe((patient) => {
-          this.registerForm.controls.firstName.setValue(patient.firstName);
-          this.registerForm.controls.lastName.setValue(patient.lastName);
-          this.registerForm.controls.dni.setValue(patient.dni);
-          this.registerForm.controls.cuil.setValue(patient.cuil);
-          const dobDate = new Date(patient.dob);
-          const year = dobDate.getFullYear();
-          const month = (dobDate.getMonth() + 1).toString().padStart(2, '0');
-          const day = dobDate.getDate().toString().padStart(2, '0');
-          const formattedDate = month + '/' + day + '/' + year;
-          console.log(formattedDate);
-          this.registerForm.controls.dob.patchValue(formattedDate);
-          this.registerForm.controls.telephone.setValue(patient.telephone);
-          this.registerForm.controls.province.setValue(
-            patient.address.province
-          );
-          this.registerForm.controls.city.setValue(patient.address.city);
-          this.registerForm.controls.street.setValue(patient.address.street);
-          this.registerForm.controls.number.setValue(patient.address.number);
-          this.registerForm.controls.department.setValue(
-            patient.address.department
-          );
-          this.registerForm.controls.medicalService.setValue(
-            patient.medicalService
-          );
-          this.registerForm.controls.medicalServiceNumber.setValue(
-            patient.medicalServiceNumber
-          );
-          this.registerForm.controls.alergies.setValue(patient.alergies);
-          this.registerForm.controls.diabetes.setValue(patient.diabetes);
-          this.registerForm.controls.reumaticFiber.setValue(
-            patient.reumaticFiber
-          );
-          this.registerForm.controls.epilepsy.setValue(patient.epilepsy);
-          this.registerForm.controls.cardiopathy.setValue(patient.cardiopathy);
-          this.registerForm.controls.hepatithis.setValue(patient.hepatithis);
-          this.registerForm.controls.other.setValue(patient.other);
-          this.registerForm.controls.otherIllnesses.setValue(
-            patient.otherIllnesses
-          );
-          this.registerForm.controls.otherDetails.setValue(
-            patient.otherDetails
-          );
-          this.registerForm.controls.generalApretiation.setValue(
-            patient.generalApretiation
-          );
-        });
+        this.patientId = params['id'];
       }
     });
+  }
 
+  ngOnInit(): void {
     this.provinces$ = this.register.getProvinces().pipe(
       catchError((error) => {
         console.error(error);
         throw new Error(error);
       })
     );
+
+    if (this.patientId) {
+      this.patientInfoLoading = true;
+      this.registerForm.controls.firstName.disable();
+      this.registerForm.controls.lastName.disable();
+      this.registerForm.controls.dni.disable();
+      this.registerForm.controls.cuil.disable();
+      this.registerForm.controls.dob.disable();
+      this.patients.getPatientById(this.patientId).subscribe((patient) => {
+        this.patientInfoLoading = false;
+        this.registerForm.controls.firstName.setValue(patient.firstName);
+        this.registerForm.controls.lastName.setValue(patient.lastName);
+        this.registerForm.controls.dni.setValue(patient.dni);
+        this.registerForm.controls.cuil.setValue(patient.cuil);
+        this.registerForm.controls.dob.setValue(this.formatDate(patient.dob));
+        this.registerForm.controls.telephone.setValue(patient.telephone);
+        this.registerForm.controls.province.setValue(patient.address.province);
+        this.registerForm.controls.city.setValue(patient.address.city);
+        this.registerForm.controls.street.setValue(patient.address.street);
+        this.registerForm.controls.number.setValue(patient.address.number);
+        this.registerForm.controls.department.setValue(
+          patient.address.department
+        );
+        this.registerForm.controls.medicalService.setValue(
+          patient.medicalService
+        );
+        this.registerForm.controls.medicalServiceNumber.setValue(
+          patient.medicalServiceNumber
+        );
+        this.registerForm.controls.alergies.setValue(patient.alergies);
+        this.registerForm.controls.diabetes.setValue(patient.diabetes);
+        this.registerForm.controls.reumaticFiber.setValue(
+          patient.reumaticFiber
+        );
+        this.registerForm.controls.epilepsy.setValue(patient.epilepsy);
+        this.registerForm.controls.cardiopathy.setValue(patient.cardiopathy);
+        this.registerForm.controls.hepatithis.setValue(patient.hepatithis);
+        this.registerForm.controls.other.setValue(patient.other);
+        this.registerForm.controls.otherIllnesses.setValue(
+          patient.otherIllnesses
+        );
+        this.registerForm.controls.otherDetails.setValue(patient.otherDetails);
+        this.registerForm.controls.generalApretiation.setValue(
+          patient.generalApretiation
+        );
+      });
+    }
+  }
+
+  padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
+  formatDate(dateParam: string | Date) {
+    const date = new Date(dateParam);
+    return [
+      date.getFullYear(),
+      this.padTo2Digits(date.getMonth() + 1),
+      this.padTo2Digits(date.getDate()),
+    ].join('-');
   }
 
   onProvinceSelected(event: Event) {
@@ -381,7 +397,7 @@ export class RegisterPatientComponent {
     );
   }
 
-  registerUser() {
+  registerUpdatePatient() {
     if (this.registerForm.invalid) {
       this.registerForm.controls.firstName.markAsDirty();
       this.registerForm.controls.lastName.markAsDirty();
@@ -411,34 +427,66 @@ export class RegisterPatientComponent {
 
     this.registerForm.controls.province.setValue(this.selectedProvinceName);
 
-    this.patients.registerPatient(this.registerForm).subscribe(
-      () => {
-        this.showLoader = false;
-        Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: 'Paciente creado con éxito',
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        this.route.navigate(['/home']);
-      },
-      (err: any) => {
-        this.showLoader = false;
-        const errors = err.error.errors;
-        let message = '';
-        errors.forEach((error: any) => {
-          message += `${error.msg}`;
-        });
+    if (this.patientId) {
+      this.patients.updatePatient(this.patientId, this.registerForm).subscribe(
+        () => {
+          this.showLoader = false;
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Paciente actualizado con éxito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.route.navigate(['/home']);
+        },
+        (err: any) => {
+          this.showLoader = false;
+          const errors = err.error.errors;
+          let message = '';
+          errors.forEach((error: any) => {
+            message += `${error.msg}`;
+          });
 
-        Swal.fire({
-          icon: 'error',
-          title:
-            'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
-          text: `${message}`,
-        });
-        console.log(err);
-      }
-    );
+          Swal.fire({
+            icon: 'error',
+            title:
+              'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
+            text: `${message}`,
+          });
+          console.log(err);
+        }
+      );
+    } else {
+      this.patients.registerPatient(this.registerForm).subscribe(
+        () => {
+          this.showLoader = false;
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Paciente creado con éxito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.route.navigate(['/home']);
+        },
+        (err: any) => {
+          this.showLoader = false;
+          const errors = err.error.errors;
+          let message = '';
+          errors.forEach((error: any) => {
+            message += `${error.msg}`;
+          });
+
+          Swal.fire({
+            icon: 'error',
+            title:
+              'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
+            text: `${message}`,
+          });
+          console.log(err);
+        }
+      );
+    }
   }
 }

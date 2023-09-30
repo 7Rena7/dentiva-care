@@ -1,0 +1,5 @@
+input[readonly] {
+  opacity: 0.8;
+  pointer-events: none;
+  background-color: #e9ecef;
+}

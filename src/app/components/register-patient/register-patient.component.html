@@ -1,8 +1,14 @@
-<div class="container animated fadeIn">
+<ng-template #loader>
+    <div class="loader-container fadeIn fast">
+        <app-loader></app-loader>
+    </div>
+</ng-template>
+
+<div *ngIf="!patientInfoLoading; else loader" class="container animated fadeIn">
     <main>
         <div class="py-5 text-center">
             <img class="d-block mx-auto mb-4" src="../assets/logo.svg" alt="" width="300" height="100">
-            <h2 *ngIf="!editingExistingPatient; else editTitle">Crear Paciente</h2>
+            <h2 *ngIf="!patientId; else editTitle">Crear Paciente</h2>
             <ng-template #editTitle>
                 <h2>Editar Paciente</h2>
             </ng-template>
@@ -10,14 +16,10 @@
         <ul class="list-inline">
             <li class="list-inline-item"><a routerLink="/home">Volver</a></li>
         </ul>
-        <!-- 
-        <div class="loader-container" *ngIf="showLoader">
-            <app-loader></app-loader>
-        </div> -->
 
         <div class="row g-5">
             <div class="">
-                <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+                <form [formGroup]="registerForm" (ngSubmit)="registerUpdatePatient()">
                     <h4 class="mb-3">Datos Personales</h4>
                     <div class="row g-3">
                         <div class="col-sm-6">
@@ -221,7 +223,7 @@
                         [ngClass]="{'disabled': showLoader}">
                         <span class="spinner-border spinner-border-md" *ngIf="showLoader"></span>
                         <div *ngIf="!showLoader">
-                            <span *ngIf="!editingExistingPatient; else editButtonText">Crear Paciente</span>
+                            <span *ngIf="!patientId; else editButtonText">Crear Paciente</span>
                             <ng-template #editButtonText>
                                 <span>Editar Paciente</span>
                             </ng-template>

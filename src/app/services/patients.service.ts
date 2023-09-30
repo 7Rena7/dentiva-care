@@ -73,6 +73,40 @@ export class PatientsService {
     return this.postQuery(body);
   }
 
+  updatePatient(uid: string, data: FormGroup): Observable<any> {
+    const { controls } = data;
+
+    const body = {
+      telephone: controls['telephone'].value,
+      address: {
+        province: controls['province'].value,
+        city: controls['city'].value,
+        street: controls['street'].value,
+        number: controls['number'].value,
+        department: controls['department'].value,
+      },
+      medicalService: controls['medicalService'].value,
+      medicalServiceNumber: controls['medicalServiceNumber'].value,
+      alergies: controls['alergies'].value,
+      diabetes: controls['diabetes'].value,
+      reumaticFiber: controls['reumaticFiber'].value,
+      epilepsy: controls['epilepsy'].value,
+      cardiopathy: controls['cardiopathy'].value,
+      hepatithis: controls['hepatithis'].value,
+      other: controls['other'].value,
+      otherIllnesses: controls['otherIllnesses'].value,
+      otherDetails: controls['otherDetails'].value,
+      generalApretiation: controls['generalApretiation'].value,
+    };
+
+    const url = `${baseUrl}/patients/${uid}`;
+    const headers = new HttpHeaders().set(
+      'x-token',
+      localStorage.getItem('token') || ''
+    );
+    return this.http.put(url, body, { headers });
+  }
+
   deletePatient(uid: string): Observable<any> {
     const url = `${baseUrl}/patients/${uid}`;
     const headers = new HttpHeaders().set(
