@@ -60,7 +60,13 @@ export class HomeComponent {
         const btn = Swal.getConfirmButton() || undefined;
         Swal.showLoading(btn);
         this.patients.deletePatient(uid).subscribe(() => {
-          Swal.fire('Paciente borrado!', '', 'success');
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Paciente eliminado correctamente',
+            showConfirmButton: false,
+            timer: 2000,
+          });
           this.patients$ = this.patients.getPatients('');
           this.search?.setValue('');
         });
