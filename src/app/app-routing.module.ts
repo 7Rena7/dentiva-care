@@ -8,6 +8,7 @@ import { RegisterPatientComponent } from './components/register-patient/register
 import { RecoverPasswordComponent } from './components/login/recover-password/recover-password.component';
 import { RestorePasswordComponent } from './components/login/restore-password/restore-password.component';
 import { RestorePasswordGuard } from './guards/restore-password.guard';
+import { OdontogramComponent } from './components/odontogram/odontogram.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,11 @@ const routes: Routes = [
   {
     path: 'patient/:id',
     component: RegisterPatientComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'odontogram/:id',
+    component: OdontogramComponent,
     canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: 'login' },

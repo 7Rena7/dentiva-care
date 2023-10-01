@@ -16,6 +16,9 @@ import { RegisterPatientComponent } from './components/register-patient/register
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { RecoverPasswordComponent } from './components/login/recover-password/recover-password.component';
 import { RestorePasswordComponent } from './components/login/restore-password/restore-password.component';
+import { OdontogramComponent } from './components/odontogram/odontogram.component';
+import { TeethComponent } from './components/odontogram/teeths/teeth/teeth.component';
+import { TeethsComponent } from './components/odontogram/teeths/teeths.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,9 @@ import { RestorePasswordComponent } from './components/login/restore-password/re
     FooterComponent,
     RecoverPasswordComponent,
     RestorePasswordComponent,
+    OdontogramComponent,
+    TeethComponent,
+    TeethsComponent,
   ],
   imports: [
     BrowserModule,
