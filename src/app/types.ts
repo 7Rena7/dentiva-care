@@ -38,3 +38,16 @@ export type Address = {
   postalCode: string;
   status: boolean;
 };
+
+export type InterventionsResponse = {
+  totalCount: number;
+  interventions: Intervention[];
+};
+
+export type Intervention = {
+  date: string;
+  intervention: string;
+  status: boolean;
+  createdBy: string;
+  uid: string;
+};

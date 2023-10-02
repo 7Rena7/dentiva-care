@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
+import { formatDate } from 'src/app/helpers/formatDate';
 import { PatientsService } from 'src/app/services/patients.service';
 import { RegisterService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
@@ -336,7 +337,7 @@ export class RegisterPatientComponent implements OnInit {
         this.registerForm.controls.lastName.setValue(patient.lastName);
         this.registerForm.controls.dni.setValue(patient.dni);
         this.registerForm.controls.cuil.setValue(patient.cuil);
-        this.registerForm.controls.dob.setValue(this.formatDate(patient.dob));
+        this.registerForm.controls.dob.setValue(formatDate(patient.dob));
         this.registerForm.controls.telephone.setValue(patient.telephone);
         this.registerForm.controls.province.setValue(patient.address.province);
         this.registerForm.controls.city.setValue(patient.address.city);
@@ -369,19 +370,6 @@ export class RegisterPatientComponent implements OnInit {
         );
       });
     }
-  }
-
-  padTo2Digits(num: number) {
-    return num.toString().padStart(2, '0');
-  }
-
-  formatDate(dateParam: string | Date) {
-    const date = new Date(dateParam);
-    return [
-      date.getFullYear(),
-      this.padTo2Digits(date.getMonth() + 1),
-      this.padTo2Digits(date.getDate()),
-    ].join('-');
   }
 
   onProvinceSelected(event: Event) {

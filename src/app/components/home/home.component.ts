@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable, last, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PatientsService } from 'src/app/services/patients.service';
 import { PatientsResponse } from 'src/app/types';
 import Swal from 'sweetalert2';
