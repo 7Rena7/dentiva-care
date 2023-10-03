@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./register-patient.component.css'],
 })
 export class RegisterPatientComponent implements OnInit {
+  // @todo: Agregar asterisco visual en los campos obligatorios
   registerForm = new FormGroup({
     firstName: new FormControl('', [
       Validators.required,
@@ -38,37 +39,31 @@ export class RegisterPatientComponent implements OnInit {
       Validators.maxLength(11),
       Validators.pattern('^[0-9]*$'),
     ]),
-    dob: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    dob: new FormControl('', [Validators.minLength(10)]),
     telephone: new FormControl('', [
-      Validators.required,
       Validators.minLength(6),
       Validators.maxLength(20),
       Validators.pattern('^[0-9]*$'),
     ]),
     province: new FormControl('', [
-      Validators.required,
       Validators.minLength(2),
       Validators.maxLength(100),
     ]),
     city: new FormControl('', [
-      Validators.required,
       Validators.minLength(2),
       Validators.maxLength(100),
     ]),
     street: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
+      Validators.minLength(1),
       Validators.maxLength(100),
     ]),
     number: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
+      Validators.minLength(1),
       Validators.maxLength(10),
       Validators.pattern('^[0-9]*$'),
     ]),
     department: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
+      Validators.minLength(1),
       Validators.maxLength(10),
     ]),
     medicalService: new FormControl('', [
@@ -153,7 +148,7 @@ export class RegisterPatientComponent implements OnInit {
     );
   }
   get isDobValid() {
-    return this.dob?.valid;
+    return this.dob?.valid && this.dobValue;
   }
 
   get telephone() {
@@ -167,7 +162,7 @@ export class RegisterPatientComponent implements OnInit {
     );
   }
   get isTelephoneValid() {
-    return this.telephone?.valid;
+    return this.telephone?.valid && this.telephone?.value;
   }
 
   get province() {
@@ -179,7 +174,7 @@ export class RegisterPatientComponent implements OnInit {
     );
   }
   get isProvinceValid() {
-    return this.province?.valid;
+    return this.province?.valid && this.province?.value;
   }
 
   get city() {
@@ -189,7 +184,7 @@ export class RegisterPatientComponent implements OnInit {
     return this.city?.dirty && this.city?.invalid && this.city?.touched;
   }
   get isCityValid() {
-    return this.city?.valid;
+    return this.city?.valid && this.city?.value;
   }
 
   get street() {
@@ -199,7 +194,7 @@ export class RegisterPatientComponent implements OnInit {
     return this.street?.dirty && this.street?.invalid && this.street?.touched;
   }
   get isStreetValid() {
-    return this.street?.valid;
+    return this.street?.valid && this.street?.value;
   }
 
   get number() {
@@ -209,7 +204,7 @@ export class RegisterPatientComponent implements OnInit {
     return this.number?.dirty && this.number?.invalid && this.number?.touched;
   }
   get isNumberValid() {
-    return this.number?.valid;
+    return this.number?.valid && this.number?.value;
   }
 
   get department() {
@@ -223,7 +218,7 @@ export class RegisterPatientComponent implements OnInit {
     );
   }
   get isDepartmentValid() {
-    return this.department?.valid;
+    return this.department?.valid && this.department?.value;
   }
 
   get medicalService() {
@@ -330,7 +325,6 @@ export class RegisterPatientComponent implements OnInit {
       this.registerForm.controls.lastName.disable();
       this.registerForm.controls.dni.disable();
       this.registerForm.controls.cuil.disable();
-      this.registerForm.controls.dob.disable();
       this.patients.getPatientById(this.patientId).subscribe((patient) => {
         this.patientInfoLoading = false;
         this.registerForm.controls.firstName.setValue(patient.firstName);

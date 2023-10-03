@@ -3,6 +3,7 @@ function padTo2Digits(num: number) {
 }
 
 export function formatDate(dateParam: string | Date) {
+  if (dateParam === null) return '';
   const date = new Date(dateParam);
   return [
     date.getFullYear(),

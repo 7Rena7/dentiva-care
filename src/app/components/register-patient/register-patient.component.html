@@ -20,12 +20,15 @@
         <div class="row g-5">
             <div class="">
                 <form [formGroup]="registerForm" (ngSubmit)="registerUpdatePatient()">
+                    <span>Los campos marcados con un asterisco (<span class="text-danger">*</span>) son
+                        obligatorios</span>
+                    <hr class="my-4">
                     <h4 class="mb-3">Datos Personales</h4>
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            <label for="firstName" class="form-label">Nombres</label>
+                            <label for="firstName" class="form-label">Nombres<span class="text-danger"> *</span></label>
                             <input formControlName="firstName" type="text" class="form-control" id="firstName"
-                                placeholder="" value="" required
+                                placeholder="" value=""
                                 [ngClass]="{'is-invalid' : isFirstNameInvalid, 'is-valid' : isFirstNameValid}">
                             <div class="invalid-feedback" *ngIf="isFirstNameInvalid">
                                 Nombre inválido (entre 2 y 50 caracteres, sin números ni caracteres especiales)
@@ -33,9 +36,10 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <label for="lastName" class="form-label">Apellidos</label>
+                            <label for="lastName" class="form-label">Apellidos<span class="text-danger">
+                                    *</span></label>
                             <input formControlName="lastName" type="text" class="form-control" id="lastName"
-                                placeholder="" value="" required
+                                placeholder="" value=""
                                 [ngClass]="{'is-invalid' : isLastNameInvalid, 'is-valid' : isLastNameValid}">
                             <div class="invalid-feedback" *ngIf="isLastNameInvalid">
                                 Apellido inválido (entre 2 y 50 caracteres, sin números ni caracteres
@@ -44,18 +48,18 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <label for="dni" class="form-label">DNI</label>
+                            <label for="dni" class="form-label">DNI<span class="text-danger"> *</span></label>
                             <input formControlName="dni" type="text" class="form-control" id="dni" placeholder=""
-                                value="" required [ngClass]="{'is-invalid' : isDniInvalid, 'is-valid' : isDniValid}">
+                                value="" [ngClass]="{'is-invalid' : isDniInvalid, 'is-valid' : isDniValid}">
                             <div class="invalid-feedback" *ngIf="isDniInvalid">
                                 DNI inválido (entre 6 y 8 digitos, sólo números)
                             </div>
                         </div>
 
                         <div class="col-sm-6">
-                            <label for="cuil" class="form-label">CUIL</label>
+                            <label for="cuil" class="form-label">CUIL<span class="text-danger"> *</span></label>
                             <input formControlName="cuil" type="text" class="form-control" id="cuil" placeholder=""
-                                value="" required [ngClass]="{'is-invalid' : isCuilInvalid, 'is-valid' : isCuilValid}">
+                                value="" [ngClass]="{'is-invalid' : isCuilInvalid, 'is-valid' : isCuilValid}">
                             <div class="invalid-feedback" *ngIf="isCuilInvalid">
                                 CUIL inválido (entre 9 y 11 digitos, sólo números)
                             </div>
@@ -64,7 +68,7 @@
                         <div class="col-sm-6">
                             <label for="dob" class="form-label">Fecha de Nacimiento</label>
                             <input formControlName="dob" type="date" class="form-control" id="dob" placeholder=""
-                                value="" required [ngClass]="{'is-invalid' : isDobInvalid, 'is-valid' : isDobValid}">
+                                value="" [ngClass]="{'is-invalid' : isDobInvalid, 'is-valid' : isDobValid}">
                             <div class="invalid-feedback" *ngIf="isDobInvalid">
                                 Seleccione una fecha
                             </div>
@@ -73,7 +77,7 @@
                         <div class="col-sm-6">
                             <label for="telefono" class="form-label">Teléfono</label>
                             <input formControlName="telephone" type="text" class="form-control" id="telefono"
-                                placeholder="" value="" required
+                                placeholder="" value=""
                                 [ngClass]="{'is-invalid' : isTelephoneInvalid, 'is-valid' : isTelephoneValid}">
                             <div class="invalid-feedback" *ngIf="isTelephoneInvalid">
                                 Teléfono inválido (entre 6 y 20 digitos, sólo números)
@@ -82,7 +86,7 @@
 
                         <hr class="my-4">
 
-                        <h4 class="mb-2 mt-4">Domicilio</h4>
+                        <h4 class="mb-2 mt-4">Domicilio <span class="text-body-secondary">(Opcional)</span></h4>
 
                         <div class="col-md-6">
                             <label for="province" class="form-label">Provincia</label>
@@ -143,7 +147,8 @@
                         <h4 class="mb-2 mt-4">Obra Social</h4>
 
                         <div class="col-sm-8">
-                            <label for="medicalService" class="form-label">Nombre</label>
+                            <label for="medicalService" class="form-label">Nombre<span class="text-danger">
+                                    *</span></label>
                             <input formControlName="medicalService" type="text" class="form-control" id="medicalService"
                                 placeholder="" value=""
                                 [ngClass]="{'is-invalid' : isMedicalServiceInvalid, 'is-valid' : isMedicalServiceValid}">
