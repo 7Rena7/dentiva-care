@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { baseUrl } from 'src/env/environment';
-import { Patient, PatientsResponse } from '../types';
+import { LineIntervention, Patient, PatientsResponse } from '../types';
 import { Observable, map } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 
@@ -114,11 +114,5 @@ export class PatientsService {
       localStorage.getItem('token') || ''
     );
     return this.http.delete(url, { headers });
-  }
-
-  getInterventions(query: string): Observable<any> {
-    return this.getQuery(`/interventions/${query}`).pipe(
-      map((resp: any) => resp.data)
-    );
   }
 }

@@ -111,11 +111,39 @@
 
         <div class="row mt-3 animated fadeIn">
             <div class="col-md-12 text-end">
-                <a type="button" class="btn btn-outline-primary fs-5" routerLink="/patient">
+                <button type="button" class="btn btn-outline-primary fs-5" data-bs-toggle="modal"
+                    data-bs-target="#createIntervention">
                     <i class="bi bi-plus-circle me-1"></i> Crear Intervención
-                </a>
+                </button>
             </div>
         </div>
+
+        <!-- Create Intervention Modal -->
+        <div class="modal fade" id="createIntervention" tabindex="-1" aria-labelledby="createInterventionLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered" id="createInterventionModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="createInterventionLabel">Crear Intervención</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <app-register-intervention [teeths]="patient.teeths"
+                        [patientId]="patientId"></app-register-intervention>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            (click)="ngOnDestroy()">Cerrar</button>
+                        <button type="button" class="btn btn-primary" (click)="onSaveInterventionClick()"
+                            [ngClass]="{'disabled': showLoader}">
+                            <span class="spinner-border spinner-border-sm" *ngIf="showLoader; else btnText"></span>
+                            <ng-template #btnText>
+                                Guardar Intervención
+                            </ng-template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <ng-template #noInterventions>
             <div class="d-flex justify-content-center align-items-center flex-column fadeIn fast">
@@ -155,18 +183,17 @@
                                 <tbody>
                                     <tr *ngFor=" let intervention of interventions.interventions; let i=index">
                                         <td class="fs-4">{{ i + 1 }}</td>
-                                        <td class="fs-4">{{ intervention.date }}</td>
+                                        <td class="fs-4 text-center">{{ intervention.date }}</td>
                                         <td class="fs-4 text-center">
-                                            <span class="badge rounded-pill text-bg-warning">Tratamiento</span>
-                                            <span class="badge rounded-pill text-bg-warning">Extracción</span>
-                                            <span class="badge rounded-pill text-bg-warning">Prótesis</span>
-                                            <span class="badge rounded-pill text-bg-warning">Endodoncia</span>
-                                            <span class="badge rounded-pill text-bg-warning">Periodoncia</span>
-                                            <span class="badge rounded-pill text-bg-warning">Ortodoncia</span>
-                                            <span class="badge rounded-pill text-bg-warning">Implante</span>
-                                            <span class="badge rounded-pill text-bg-warning">Otro</span>
+                                            <ng-container
+                                                *ngFor="let lineIntervention of intervention.lineInterventions">
+                                                <span class="badge rounded-pill text-bg-success me-2"
+                                                    [ngClass]="{'text-bg-danger': !lineIntervention.done}">{{lineIntervention.teethNumber
+                                                    + ' '
+                                                    + lineIntervention.treatment}}</span>
+                                            </ng-container>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <a class="btn btn-md btn-outline-secondary fs-5 me-2"
                                                 [routerLink]="['..', 'intervention', intervention.uid]">
                                                 <i class="bi bi-pencil"></i>

@@ -25,6 +25,7 @@ export type Patient = {
   otherDetails: string;
   generalApretiation: string;
   status: boolean;
+  teeths: Array<Teeth>;
   createdBy: string;
   uid: string;
 };
@@ -46,8 +47,31 @@ export type InterventionsResponse = {
 
 export type Intervention = {
   date: string;
-  intervention: string;
+  lineInterventions: LineIntervention[];
   status: boolean;
   createdBy: string;
+  uid: string;
+};
+
+export type LineIntervention = {
+  index: number | undefined;
+  teethNumber: string;
+  section: string;
+  treatment: string;
+  done: boolean;
+  uid: string;
+};
+
+export type Teeth = {
+  name: string;
+  number: number;
+  area: string;
+  sections: Array<Section>;
+  uid: string;
+};
+
+export type Section = {
+  name: string;
+  number: number;
   uid: string;
 };

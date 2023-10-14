@@ -1,0 +1,59 @@
+<ng-template #loader>
+    <div class="loader-container fadeIn fast">
+        <app-loader></app-loader>
+    </div>
+</ng-template>
+
+<div *ngIf="!interventionInfoLoading; else loader" class="container animated fadeIn my-3">
+    <form [formGroup]="interventionForm" (ngSubmit)="registerUpdateIntervention()">
+        <div class="row g-3">
+            <div class="col-sm-5 ms-3">
+                <label for="date" class="form-label">Fecha<span class="text-danger"> *</span> <span
+                        class="text-body-secondary"> (fecha de hoy por defecto)</span></label>
+                <input formControlName="date" type="date" class="form-control" id="date" placeholder="" value=""
+                    [ngClass]="{'is-invalid' : isDateInvalid, 'is-valid' : isDateValid}">
+                <div class="invalid-feedback" *ngIf="isDateInvalid">
+                    Fecha inválida
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-3 mb-2">
+                <hr class="w-100">
+            </div>
+
+            <div class="row">
+
+                <div *ngFor="let lineIntervention of lineInterventions; let i = index">
+                    <app-line-intervention [teeths]="teeths" [id]="i" (deleteLine)="deleteLineIntervention($event)"
+                        (updateLine)="updateLineIntervention(i, $event)"></app-line-intervention>
+                </div>
+
+                <div class="col-sm-12 px-0 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" (click)="addLineIntervention()">
+                        <span #btnText>
+                            <i class="bi bi-plus-circle me-1"></i> Agregar Línea
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-2 mb-3">
+                <hr class="w-100">
+            </div>
+
+            <div class="d-flex align-items-center flex-column">
+                <div class="col-sm-10">
+                    <label for="softTissues" class="form-label">Tejidos Blandos</label>
+                    <textarea formControlName="softTissues" type="text" class="form-control" id="softTissues"
+                        placeholder="" value="" style="resize: none;" rows="3"></textarea>
+                </div>
+
+                <div class="col-sm-10 mt-3">
+                    <label for="observations" class="form-label">Observaciones</label>
+                    <textarea formControlName="observations" type="text" class="form-control" id="observations"
+                        placeholder="" value="" style="resize: none;" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

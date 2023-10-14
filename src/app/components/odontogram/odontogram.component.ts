@@ -1,18 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { formatDate } from 'src/app/helpers/formatDate';
 import { PatientsService } from 'src/app/services/patients.service';
 import { InterventionsResponse, Patient } from 'src/app/types';
-import Swal from 'sweetalert2';
+import { RegisterInterventionComponent } from './register-intervention/register-intervention.component';
+import { InterventionsService } from 'src/app/services/interventions.service';
 
 @Component({
   selector: 'app-odontogram',
   templateUrl: './odontogram.component.html',
   styleUrls: ['./odontogram.component.css'],
 })
-export class OdontogramComponent {
+export class OdontogramComponent implements OnDestroy {
+  @ViewChild(RegisterInterventionComponent)
+  registerInterventionComponent!: RegisterInterventionComponent;
+
   patientForm = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -36,12 +40,14 @@ export class OdontogramComponent {
   }
 
   patient$: Observable<Patient> | undefined;
+  patientId: string = '';
   interventions$: Observable<InterventionsResponse> | undefined;
   patientHasIllnesses = false;
-  private searchTimeout: any;
+  showLoader = false;
 
   constructor(
     public patients: PatientsService,
+    private interventionsService: InterventionsService,
     private activatedRoute: ActivatedRoute
   ) {
     this.patientForm.controls.firstName.disable();
@@ -56,55 +62,56 @@ export class OdontogramComponent {
     this.patientForm.controls.otherDetails.disable();
     this.patientForm.controls.generalApretiation.disable();
     this.activatedRoute.params.subscribe((params) => {
-      this.patients.getPatientById(params['id']).subscribe((patient) => {
-        this.patient$ = this.patients.getPatientById(params['id']);
-        this.patientForm.controls.firstName.setValue(patient.firstName);
-        this.patientForm.controls.lastName.setValue(patient.lastName);
-        this.patientForm.controls.dni.setValue(patient.dni);
-        this.patientForm.controls.cuil.setValue(patient.cuil);
-        this.patientForm.controls.dob.setValue(formatDate(patient.dob));
-        this.patientForm.controls.telephone.setValue(patient.telephone);
-        this.patientForm.controls.medicalService.setValue(
-          patient.medicalService
-        );
-        this.patientForm.controls.medicalServiceNumber.setValue(
-          patient.medicalServiceNumber
-        );
-        this.patientForm.controls.otherIllnesses.setValue(
-          patient.otherIllnesses
-        );
-        this.patientForm.controls.otherDetails.setValue(patient.otherDetails);
-        this.patientForm.controls.generalApretiation.setValue(
-          patient.generalApretiation
-        );
-        this.patientHasIllnesses =
-          patient.alergies ||
-          patient.diabetes ||
-          patient.reumaticFiber ||
-          patient.epilepsy ||
-          patient.cardiopathy ||
-          patient.hepatithis ||
-          patient.other;
-      });
+      this.patientId = params['id'];
+      this.patient$ = this.patients.getPatientById(this.patientId).pipe(
+        map((patient: Patient) => {
+          this.patientForm.controls.firstName.setValue(patient.firstName);
+          this.patientForm.controls.lastName.setValue(patient.lastName);
+          this.patientForm.controls.dni.setValue(patient.dni);
+          this.patientForm.controls.cuil.setValue(patient.cuil);
+          this.patientForm.controls.dob.setValue(formatDate(patient.dob));
+          this.patientForm.controls.telephone.setValue(patient.telephone);
+          this.patientForm.controls.medicalService.setValue(
+            patient.medicalService
+          );
+          this.patientForm.controls.medicalServiceNumber.setValue(
+            patient.medicalServiceNumber
+          );
+          this.patientForm.controls.otherIllnesses.setValue(
+            patient.otherIllnesses
+          );
+          this.patientForm.controls.otherDetails.setValue(patient.otherDetails);
+          this.patientForm.controls.generalApretiation.setValue(
+            patient.generalApretiation
+          );
+          this.patientHasIllnesses =
+            patient.alergies ||
+            patient.diabetes ||
+            patient.reumaticFiber ||
+            patient.epilepsy ||
+            patient.cardiopathy ||
+            patient.hepatithis ||
+            patient.other;
+          return patient;
+        })
+      );
+
+      this.interventions$ = this.interventionsService.getInterventions(
+        this.patientId
+      );
     });
   }
 
-  ngOnInit(): void {
-    this.search?.valueChanges.subscribe((searchValue) => {
-      clearTimeout(this.searchTimeout); // Clear any existing timeout
-
-      // Set a timeout to perform the search after a delay (300ms in this example)
-      this.searchTimeout = setTimeout(() => {
-        this.performSearch(searchValue?.toLowerCase() || '');
-      }, 200);
+  onSaveInterventionClick() {
+    this.showLoader = true;
+    this.registerInterventionComponent.registerUpdateIntervention().then(() => {
+      this.showLoader = false;
     });
   }
 
-  performSearch(searchValue: string) {
-    this.interventions$ = this.patients.getInterventions(searchValue);
-  }
+  deleteIntervention(uid: string) {}
 
-  deleteIntervention(uid: string) {
-    console.log('delete intervention', uid);
+  ngOnDestroy(): void {
+    this.registerInterventionComponent.ngOnDestroy();
   }
 }

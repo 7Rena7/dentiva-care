@@ -19,6 +19,8 @@ import { RestorePasswordComponent } from './components/login/restore-password/re
 import { OdontogramComponent } from './components/odontogram/odontogram.component';
 import { TeethComponent } from './components/odontogram/teeths/teeth/teeth.component';
 import { TeethsComponent } from './components/odontogram/teeths/teeths.component';
+import { RegisterInterventionComponent } from './components/odontogram/register-intervention/register-intervention.component';
+import { LineInterventionComponent } from './components/odontogram/register-intervention/line-intervention/line-intervention.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,8 @@ import { TeethsComponent } from './components/odontogram/teeths/teeths.component
     OdontogramComponent,
     TeethComponent,
     TeethsComponent,
+    RegisterInterventionComponent,
+    LineInterventionComponent,
   ],
   imports: [
     BrowserModule,
