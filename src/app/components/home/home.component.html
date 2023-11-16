@@ -28,7 +28,7 @@
         <div class="d-flex justify-content-center align-items-center flex-column fadeIn fast">
             <div class="row pt-4">
                 <div class="col-md-12">
-                    <img src="../../../assets/not-found-copy.png" class="rounded" width="400" />
+                    <img src="../../../assets/not-found.png" class="rounded" width="400" />
                 </div>
             </div>
             <div class="row pt-4">
@@ -47,15 +47,6 @@
     <div class="main-container fadeIn fast mt-5">
         <ng-container *ngIf="(patients$ | async) as patients; else loader">
             <ng-container *ngIf="patients.totalCount > 0; else noPatients">
-                <div class="row animated  mx-5">
-                    <!-- <div class="col" *ngIf="auth.user$ | async as profile">
-                                <h3>
-                                    Panel Administrador - {{ profile.nickname | titlecase }} -
-                                    {{ profile.email }}
-                                </h3>
-                            </div> -->
-                </div>
-
                 <div class="row">
                     <div class="col">
                         <table class="table">
@@ -89,11 +80,6 @@
                                             --
                                         </td>
                                     </ng-template>
-
-                                    <!-- <td class="fs-4">
-                                                    <label class="badge text-bg-success" *ngIf="clothe.isAvailable">Activo</label>
-                                                    <label class="badge text-bg-danger" *ngIf="!clothe.isAvailable">Inactivo</label>
-                                                </td> -->
                                     <td>
                                         <a class="btn btn-md btn-outline-success fs-5 me-2"
                                             [routerLink]="['..', 'odontogram', patient.uid]">

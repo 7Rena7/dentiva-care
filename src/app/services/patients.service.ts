@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { baseUrl } from 'src/env/environment';
-import { LineIntervention, Patient, PatientsResponse } from '../types';
+import { Patient, PatientsResponse } from '../types';
 import { Observable, map } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 

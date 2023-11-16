@@ -61,15 +61,6 @@ export type Intervention = {
   uid: string;
 };
 
-export type LineInterventionsResponse = {
-  teethNumber: number;
-  treatment: string;
-  section: string;
-  done: boolean;
-  date: string;
-  uid: string;
-};
-
 export type LineIntervention = {
   index: number | undefined;
   teethNumber: number | null;
