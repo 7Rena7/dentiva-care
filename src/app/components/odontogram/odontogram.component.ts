@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
@@ -149,8 +149,4 @@ export class OdontogramComponent {
       }
     });
   }
-
-  // ngOnDestroy(): void {
-  //   this.registerInterventionComponent.ngOnDestroy();
-  // }
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, map } from 'rxjs';
 import { baseUrl } from 'src/env/environment';
-import { Intervention, InterventionResponse, LineIntervention } from '../types';
+import { Intervention, LineIntervention } from '../types';
 
 @Injectable({
   providedIn: 'root',

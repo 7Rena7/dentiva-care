@@ -1,13 +1,18 @@
+// Modules
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+// Guards
+import { AuthGuard } from './guards/authguard.guard';
+import { RestorePasswordGuard } from './guards/restore-password.guard';
+
+// Components
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { AuthGuard } from './guards/authguard.guard';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { RegisterPatientComponent } from './components/register-patient/register-patient.component';
 import { RecoverPasswordComponent } from './components/login/recover-password/recover-password.component';
 import { RestorePasswordComponent } from './components/login/restore-password/restore-password.component';
-import { RestorePasswordGuard } from './guards/restore-password.guard';
 import { OdontogramComponent } from './components/odontogram/odontogram.component';
 import { CreateInterventionComponent } from './components/odontogram/create-intervention/create-intervention.component';
 

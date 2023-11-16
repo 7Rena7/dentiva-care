@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-teeths',
   templateUrl: './teeths.component.html',
-  styleUrls: ['./teeths.component.css'],
 })
 export class TeethsComponent {
   firstSection = [
@@ -49,6 +48,4 @@ export class TeethsComponent {
     { number: 37, name: '37' },
     { number: 38, name: '38' },
   ];
-
-  constructor() {}
 }

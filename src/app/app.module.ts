@@ -11,7 +11,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
-import { LoaderComponent } from './components/common/loader/loader.component';
+import { LoaderComponent } from './components/shared/loader/loader.component';
 import { RegisterPatientComponent } from './components/register-patient/register-patient.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { RecoverPasswordComponent } from './components/login/recover-password/recover-password.component';

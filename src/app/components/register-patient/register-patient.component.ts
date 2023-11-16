@@ -13,7 +13,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./register-patient.component.css'],
 })
 export class RegisterPatientComponent implements OnInit {
-  // @todo: Agregar asterisco visual en los campos obligatorios
   registerForm = new FormGroup({
     firstName: new FormControl('', [
       Validators.required,
