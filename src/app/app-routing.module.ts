@@ -9,6 +9,7 @@ import { RecoverPasswordComponent } from './components/login/recover-password/re
 import { RestorePasswordComponent } from './components/login/restore-password/restore-password.component';
 import { RestorePasswordGuard } from './guards/restore-password.guard';
 import { OdontogramComponent } from './components/odontogram/odontogram.component';
+import { CreateInterventionComponent } from './components/odontogram/create-intervention/create-intervention.component';
 
 const routes: Routes = [
   {
@@ -41,8 +42,18 @@ const routes: Routes = [
     component: OdontogramComponent,
     canActivate: [AuthGuard],
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' },
+  {
+    path: 'intervention/:patientId',
+    component: CreateInterventionComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'intervention/:patientId/:interventionId',
+    component: CreateInterventionComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home' },
 ];
 
 @NgModule({

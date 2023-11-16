@@ -309,6 +309,7 @@ export class RegisterPatientComponent implements OnInit {
         this.patientId = params['id'];
       }
     });
+    this.registerForm.controls.dob.setValue('');
   }
 
   ngOnInit(): void {

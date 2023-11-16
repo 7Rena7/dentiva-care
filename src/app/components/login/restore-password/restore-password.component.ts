@@ -51,7 +51,6 @@ export class RestorePasswordComponent {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((parameter) => {
-      console.log(parameter);
       this.userId = parameter['userid'];
     });
   }

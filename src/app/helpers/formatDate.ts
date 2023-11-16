@@ -11,3 +11,17 @@ export function formatDate(dateParam: string | Date) {
     padTo2Digits(date.getDate()),
   ].join('-');
 }
+
+export function formatSpanishDate(value: string | undefined | null): string {
+  if (!value) {
+    return ''; // Return empty string for undefined or null values
+  }
+
+  const parts = value.split('-');
+  if (parts.length !== 3) {
+    return value; // Return as is if not in the expected format
+  }
+
+  const [year, month, day] = parts;
+  return `${day}/${month}/${year}`;
+}

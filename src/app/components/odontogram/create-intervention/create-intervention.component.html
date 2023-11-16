@@ -1,0 +1,104 @@
+<ng-template #loader>
+    <div class="loader-container fadeIn fast">
+        <app-loader></app-loader>
+    </div>
+</ng-template>
+
+<div *ngIf="!interventionInfoLoading; else loader" class="container animated fadeIn">
+    <main>
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="../assets/logo.svg" alt="" width="300" height="100">
+            <h2 *ngIf="!interventionId; else editTitle">Crear Intervención</h2>
+            <ng-template #editTitle>
+                <h2>Editar Intervención</h2>
+            </ng-template>
+        </div>
+        <ul class="list-inline">
+            <li class="list-inline-item fs-5"><a [routerLink]="['/odontogram', patientId]">Volver</a></li>
+        </ul>
+
+        <div class="row g-5">
+            <form [formGroup]="interventionForm" (ngSubmit)="registerUpdateIntervention()">
+                <div class="row g-3">
+                    <div class="col-sm-4 ms-3 mb-3">
+                        <label for="date" class="form-label fs-5">Fecha<span class="text-danger"> *</span> <span
+                                class="text-body-secondary"> (hoy por defecto)</span></label>
+                        <!-- @Todo: Update to show date in Spanish format -->
+                        <input formControlName="date" type="date" class="form-control fs-5" id="date" value=""
+                            [ngClass]="{'is-invalid' : isDateInvalid, 'is-valid' : isDateValid}">
+                        <div class="invalid-feedback fs-5" *ngIf="isDateInvalid">
+                            Una fecha menor o igual a la fecha de hoy debe ser ingresada
+                        </div>
+                    </div>
+
+                    <h3 class="mt-3 mb-0">Lineas Intervención</h3>
+
+                    <div class="d-flex justify-content-center mb-3">
+                        <hr class="w-100">
+                    </div>
+
+                    <div class="row">
+                        <div *ngFor="let lineIntervention of lineInterventions; let i = index">
+                            <app-line-intervention [teeths]="teeths" [id]="i"
+                                (deleteLine)="deleteLineIntervention($event)"
+                                (updateLine)="updateLineIntervention(i, $event)"
+                                [lineData]="lineIntervention"></app-line-intervention>
+                            <div class="d-flex justify-content-center mb-3" *ngIf="lineInterventions.length > 1">
+                                <hr class="w-100">
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12 d-flex justify-content-center">
+                            <button type="button" class="btn btn-outline-primary fs-5" (click)="addLineIntervention()">
+                                <i class="bi bi-plus-circle me-1"></i> Agregar Línea Intervención
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        <hr class="w-100">
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-evenly">
+                        <div class="col-sm-6 me-3">
+                            <label for="softTissues" class="form-label fs-5">Tejidos Blandos</label>
+                            <textarea formControlName="softTissues" type="text" class="form-control fs-5"
+                                id="softTissues" placeholder="Trabajo en encías..." value="" style="resize: none;"
+                                rows="5"></textarea>
+                        </div>
+
+                        <div class="col-sm-6 ms-3">
+                            <label for="observations" class="form-label fs-5">Observaciones</label>
+                            <textarea formControlName="observations" type="text" class="form-control fs-5"
+                                id="observations" placeholder="Otros tratamientos..." value="" style="resize: none;"
+                                rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center mt-5">
+                    <div class="col-md-6">
+                        <button class="w-100 btn btn-primary btn-lg mt-5" type="submit"
+                            [ngClass]="{'disabled': showLoader}">
+                            <span class="spinner-border spinner-border-md" *ngIf="showLoader"></span>
+                            <div *ngIf="!showLoader">
+                                <span *ngIf="!interventionId; else editButtonText">Crear Intervención</span>
+                                <ng-template #editButtonText>
+                                    <span>Editar Intervención</span>
+                                </ng-template>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <ul class="list-inline text-center mt-3 fs-5">
+                    <li class="list-inline-item"><a [routerLink]="['/odontogram', patientId]">Volver</a></li>
+                </ul>
+            </form>
+        </div>
+    </main>
+
+    <footer class="my-5 pt-5 text-body-secondary text-center text-small">
+        <p class="mb-1">&copy; 2023 Dentiva Care</p>
+    </footer>
+</div>

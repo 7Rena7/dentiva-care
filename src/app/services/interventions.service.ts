@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, map } from 'rxjs';
 import { baseUrl } from 'src/env/environment';
-import { LineIntervention } from '../types';
+import { Intervention, InterventionResponse, LineIntervention } from '../types';
 
 @Injectable({
   providedIn: 'root',
@@ -42,8 +42,13 @@ export class InterventionsService {
     return this.getQuery(`/${patientId}`).pipe(map((resp: any) => resp.data));
   }
 
-  getInterventionById(uid: string): Observable<any> {
-    return this.getQuery(`/${uid}`).pipe(map((resp: any) => resp.data));
+  getInterventionById(
+    patientId: string,
+    interventionId: string
+  ): Observable<Intervention> {
+    return this.getQuery(`/${patientId}/${interventionId}`).pipe(
+      map((resp: any) => resp.data)
+    );
   }
 
   registerIntervention(
@@ -52,18 +57,16 @@ export class InterventionsService {
     patientId: string
   ): Observable<any> {
     const { controls } = data;
-    console.log(data);
-    console.log(lineInterventions);
 
     const body = {
       date: controls['date'].value,
       softTissues: controls['softTissues'].value,
       observations: controls['observations'].value,
       patientId,
-      lineInterventions: lineInterventions,
+      lineInterventions,
     };
 
-    return this.postQuery(body);
+    return this.postQuery(body).pipe(map((data: any) => data));
   }
 
   updateIntervention(
@@ -77,9 +80,18 @@ export class InterventionsService {
       date: controls['date'].value,
       softTissues: controls['softTissues'].value,
       observations: controls['observations'].value,
-      interventions: lineInterventions,
+      lineInterventions,
     };
 
     return this.putQuery(uid, body);
+  }
+
+  deleteIntervention(uid: string): Observable<any> {
+    const url = `${baseUrl}/interventions/${uid}`;
+    const headers = new HttpHeaders().set(
+      'x-token',
+      localStorage.getItem('token') || ''
+    );
+    return this.http.delete(url, { headers });
   }
 }

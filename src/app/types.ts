@@ -26,6 +26,7 @@ export type Patient = {
   generalApretiation: string;
   status: boolean;
   teeths: Array<Teeth>;
+  lastInterventionDate: string;
   createdBy: string;
   uid: string;
 };
@@ -45,21 +46,38 @@ export type InterventionsResponse = {
   interventions: Intervention[];
 };
 
+export type InterventionResponse = {
+  msg: string;
+  data: Intervention;
+};
+
 export type Intervention = {
   date: string;
   lineInterventions: LineIntervention[];
+  softTissues: string;
+  observations: string;
   status: boolean;
   createdBy: string;
   uid: string;
 };
 
+export type LineInterventionsResponse = {
+  teethNumber: number;
+  treatment: string;
+  section: string;
+  done: boolean;
+  date: string;
+  uid: string;
+};
+
 export type LineIntervention = {
   index: number | undefined;
-  teethNumber: string;
-  section: string;
+  teethNumber: number | null;
   treatment: string;
   done: boolean;
+  date: string;
   uid: string;
+  section: string;
 };
 
 export type Teeth = {
