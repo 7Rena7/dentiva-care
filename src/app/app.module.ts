@@ -19,8 +19,9 @@ import { RestorePasswordComponent } from './components/login/restore-password/re
 import { OdontogramComponent } from './components/odontogram/odontogram.component';
 import { TeethComponent } from './components/odontogram/teeths/teeth/teeth.component';
 import { TeethsComponent } from './components/odontogram/teeths/teeths.component';
-import { RegisterInterventionComponent } from './components/odontogram/register-intervention/register-intervention.component';
-import { LineInterventionComponent } from './components/odontogram/register-intervention/line-intervention/line-intervention.component';
+import { LineInterventionComponent } from './components/odontogram/create-intervention/line-intervention/line-intervention.component';
+import { DateSpanishFormatPipe } from './pipes/date-spanish-format.pipe';
+import { CreateInterventionComponent } from './components/odontogram/create-intervention/create-intervention.component';
 
 @NgModule({
   declarations: [
@@ -37,8 +38,9 @@ import { LineInterventionComponent } from './components/odontogram/register-inte
     OdontogramComponent,
     TeethComponent,
     TeethsComponent,
-    RegisterInterventionComponent,
     LineInterventionComponent,
+    DateSpanishFormatPipe,
+    CreateInterventionComponent,
   ],
   imports: [
     BrowserModule,

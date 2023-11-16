@@ -1,22 +1,20 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
-import { formatDate } from 'src/app/helpers/formatDate';
+import { formatDate, formatSpanishDate } from 'src/app/helpers/formatDate';
 import { PatientsService } from 'src/app/services/patients.service';
 import { InterventionsResponse, Patient } from 'src/app/types';
-import { RegisterInterventionComponent } from './register-intervention/register-intervention.component';
 import { InterventionsService } from 'src/app/services/interventions.service';
+import * as bootstrap from 'bootstrap';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-odontogram',
   templateUrl: './odontogram.component.html',
   styleUrls: ['./odontogram.component.css'],
 })
-export class OdontogramComponent implements OnDestroy {
-  @ViewChild(RegisterInterventionComponent)
-  registerInterventionComponent!: RegisterInterventionComponent;
-
+export class OdontogramComponent {
   patientForm = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -44,6 +42,7 @@ export class OdontogramComponent implements OnDestroy {
   interventions$: Observable<InterventionsResponse> | undefined;
   patientHasIllnesses = false;
   showLoader = false;
+  modal!: bootstrap.Modal | null;
 
   constructor(
     public patients: PatientsService,
@@ -96,22 +95,62 @@ export class OdontogramComponent implements OnDestroy {
         })
       );
 
-      this.interventions$ = this.interventionsService.getInterventions(
-        this.patientId
-      );
+      this.getInterventions();
     });
   }
 
-  onSaveInterventionClick() {
-    this.showLoader = true;
-    this.registerInterventionComponent.registerUpdateIntervention().then(() => {
-      this.showLoader = false;
+  getInterventions() {
+    this.interventions$ = this.interventionsService.getInterventions(
+      this.patientId
+    );
+  }
+
+  getCreateInterventionModal() {
+    const myModal = document.getElementById('createIntervention');
+    this.modal = bootstrap.Modal.getInstance(myModal as HTMLElement);
+  }
+
+  deleteIntervention(
+    uid: string,
+    date: string,
+    firstName: string,
+    lastName: string
+  ) {
+    date = formatSpanishDate(date);
+    Swal.fire({
+      title: `Borrar Intervención de la fecha ${date}?`,
+      text: `Estas segur@ que deseas eliminar la intervención del paciente ${firstName} ${lastName} de la fecha ${date}?`,
+      icon: 'warning',
+      confirmButtonText: 'Borrar',
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: `Borrando Intervención...`,
+          text: `Espere un momento.`,
+          icon: 'info',
+          allowOutsideClick: false,
+        });
+        const btn = Swal.getConfirmButton() || undefined;
+        Swal.showLoading(btn);
+        this.interventionsService.deleteIntervention(uid).subscribe(() => {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Intervención eliminada correctamente',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          this.interventions$ = this.interventionsService.getInterventions(
+            this.patientId
+          );
+          this.search?.setValue('');
+        });
+      }
     });
   }
 
-  deleteIntervention(uid: string) {}
-
-  ngOnDestroy(): void {
-    this.registerInterventionComponent.ngOnDestroy();
-  }
+  // ngOnDestroy(): void {
+  //   this.registerInterventionComponent.ngOnDestroy();
+  // }
 }

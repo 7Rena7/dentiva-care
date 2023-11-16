@@ -80,9 +80,16 @@
                                     <td class="fs-4">{{ patient.firstName + ' ' + patient.lastName }}</td>
                                     <td class="fs-4 text-center">{{ patient.dni }}</td>
                                     <td class="fs-4 text-center">{{ patient.cuil }}</td>
-                                    <td class="fs-4 text-center">
-                                        --
+                                    <td class="fs-4 text-center"
+                                        *ngIf="patient.lastInterventionDate !== undefined; else emptyDate">
+                                        {{ patient.lastInterventionDate | dateSpanishFormat }}
                                     </td>
+                                    <ng-template #emptyDate>
+                                        <td class="fs-4 text-center">
+                                            --
+                                        </td>
+                                    </ng-template>
+
                                     <!-- <td class="fs-4">
                                                     <label class="badge text-bg-success" *ngIf="clothe.isAvailable">Activo</label>
                                                     <label class="badge text-bg-danger" *ngIf="!clothe.isAvailable">Inactivo</label>
