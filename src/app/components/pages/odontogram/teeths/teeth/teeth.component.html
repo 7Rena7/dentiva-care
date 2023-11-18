@@ -1,4 +1,5 @@
-<div class="d-flex flex-column-reverse align-items-center">
-    <div class="border teeth"></div>
-    <span>{{number}}</span>
+<div class="d-flex flex-column align-items-center">
+    <span>{{teethNumber}}</span>
+    <div class="border teeth" (click)="selectTeeth(teethNumber)"
+        [ngClass]="{'selected': selected, 'not-selected': !selected}"></div>
 </div>

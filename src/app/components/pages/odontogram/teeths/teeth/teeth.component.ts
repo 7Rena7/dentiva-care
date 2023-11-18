@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-teeth',
@@ -6,5 +6,12 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./teeth.component.css'],
 })
 export class TeethComponent {
-  @Input() number: number = NaN;
+  @Input() teethNumber: number | undefined = undefined;
+  @Output() selectTeethEvent = new EventEmitter<number | undefined>();
+  @Input() selected = false;
+
+  selectTeeth(teethNumber: number | undefined) {
+    this.selected = !this.selected;
+    if (teethNumber !== undefined) this.selectTeethEvent.emit(teethNumber);
+  }
 }

@@ -6,7 +6,6 @@ import { formatDate, formatSpanishDate } from 'src/app/helpers/formatDate';
 import { PatientsService } from 'src/app/services/patients.service';
 import { InterventionsResponse, Patient } from 'src/app/types';
 import { InterventionsService } from 'src/app/services/interventions.service';
-import * as bootstrap from 'bootstrap';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,6 +14,13 @@ import Swal from 'sweetalert2';
   styleUrls: ['./odontogram.component.css'],
 })
 export class OdontogramComponent {
+  patient$: Observable<Patient> | undefined;
+  patientId: string = '';
+  interventions$: Observable<InterventionsResponse> | undefined;
+  patientHasIllnesses = false;
+  showLoader = false;
+  selectedTeeth: number | undefined = undefined;
+
   patientForm = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -36,13 +42,6 @@ export class OdontogramComponent {
   get search() {
     return this.searchForm.get('search');
   }
-
-  patient$: Observable<Patient> | undefined;
-  patientId: string = '';
-  interventions$: Observable<InterventionsResponse> | undefined;
-  patientHasIllnesses = false;
-  showLoader = false;
-  modal!: bootstrap.Modal | null;
 
   constructor(
     public patients: PatientsService,
@@ -99,15 +98,11 @@ export class OdontogramComponent {
     });
   }
 
-  getInterventions() {
+  getInterventions(teethNumber?: number) {
     this.interventions$ = this.interventionsService.getInterventions(
-      this.patientId
+      this.patientId,
+      teethNumber || undefined
     );
-  }
-
-  getCreateInterventionModal() {
-    const myModal = document.getElementById('createIntervention');
-    this.modal = bootstrap.Modal.getInstance(myModal as HTMLElement);
   }
 
   deleteIntervention(
@@ -148,5 +143,17 @@ export class OdontogramComponent {
         });
       }
     });
+  }
+
+  teethSelected(teethNumberSelected: number | undefined) {
+    if (
+      teethNumberSelected !== undefined &&
+      teethNumberSelected !== this.selectedTeeth
+    ) {
+      this.selectedTeeth = teethNumberSelected;
+    } else {
+      this.selectedTeeth = undefined;
+    }
+    this.getInterventions(this.selectedTeeth || undefined);
   }
 }

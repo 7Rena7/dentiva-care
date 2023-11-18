@@ -38,8 +38,21 @@ export class InterventionsService {
     return this.http.put(url, data, { headers });
   }
 
-  getInterventions(patientId: string): Observable<any> {
-    return this.getQuery(`/${patientId}`).pipe(map((resp: any) => resp.data));
+  getInterventions(patientId: string, teethNumber?: number): Observable<any> {
+    return this.getQuery(`/${patientId}`).pipe(
+      map((resp: any) => {
+        if (teethNumber) {
+          resp.data.interventions = resp.data.interventions.filter(
+            (intervention: Intervention) =>
+              intervention.lineInterventions.some(
+                (lineIntervention: LineIntervention) =>
+                  lineIntervention.teethNumber === teethNumber
+              )
+          );
+        }
+        return resp.data;
+      })
+    );
   }
 
   getInterventionById(

@@ -55,9 +55,7 @@
         </div>
 
         <div class="col-sm-2 d-flex justify-content-center flex-column" *ngIf="done?.value">
-            <label for="date" class="form-label fs-6">Fecha
-                <!-- <span class="text-body-secondary"> (hoy por defecto)</span> -->
-            </label>
+            <label for="date" class="form-label fs-6">Fecha</label>
             <!-- @Todo: Update to show date in Spanish format -->
             <input formControlName="date" type="date" class="form-control fs-5" [id]="'line-date-' + id"
                 [ngClass]="{'is-invalid' : isDateInvalid, 'is-valid' : isDateValid}" (keyup)="updateLineIntervention()">
