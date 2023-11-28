@@ -19,7 +19,7 @@
                         <div class="col-sm-6">
                             <label for="firstName" class="form-label">Nombres<span class="text-danger"> *</span></label>
                             <input formControlName="firstName" type="text" class="form-control" id="firstName"
-                                placeholder="" value="" required
+                                placeholder="" value=""
                                 [ngClass]="{'is-invalid' : isFirstNameInvalid, 'is-valid' : isFirstNameValid}">
                             <div class="invalid-feedback" *ngIf="isFirstNameInvalid">
                                 Nombre inválido (entre 2 y 50 caracteres, sin números ni caracteres especiales)
@@ -30,7 +30,7 @@
                             <label for="lastName" class="form-label">Apellidos<span class="text-danger">
                                     *</span></label>
                             <input formControlName="lastName" type="text" class="form-control" id="lastName"
-                                placeholder="" value="" required
+                                placeholder="" value=""
                                 [ngClass]="{'is-invalid' : isLastNameInvalid, 'is-valid' : isLastNameValid}">
                             <div class="invalid-feedback" *ngIf="isLastNameInvalid">
                                 Apellido inválido (entre 2 y 50 caracteres, sin números ni caracteres
@@ -41,7 +41,7 @@
                         <div class="col-sm-6">
                             <label for="dni" class="form-label">DNI<span class="text-danger"> *</span></label>
                             <input formControlName="dni" type="text" class="form-control" id="dni" placeholder=""
-                                value="" required [ngClass]="{'is-invalid' : isDniInvalid, 'is-valid' : isDniValid}">
+                                value="" [ngClass]="{'is-invalid' : isDniInvalid, 'is-valid' : isDniValid}">
                             <div class="invalid-feedback" *ngIf="isDniInvalid">
                                 DNI inválido (entre 6 y 8 digitos, sólo números)
                             </div>
@@ -50,7 +50,7 @@
                         <div class="col-sm-6">
                             <label for="cuil" class="form-label">CUIL<span class="text-danger"> *</span></label>
                             <input formControlName="cuil" type="text" class="form-control" id="cuil" placeholder=""
-                                value="" required [ngClass]="{'is-invalid' : isCuilInvalid, 'is-valid' : isCuilValid}">
+                                value="" [ngClass]="{'is-invalid' : isCuilInvalid, 'is-valid' : isCuilValid}">
                             <div class="invalid-feedback" *ngIf="isCuilInvalid">
                                 CUIL inválido (entre 9 y 11 digitos, sólo números)
                             </div>
@@ -59,7 +59,7 @@
                         <div class="col-sm-6">
                             <label for="telefono" class="form-label">Teléfono</label>
                             <input formControlName="telephone" type="text" class="form-control" id="telefono"
-                                placeholder="" value="" required
+                                placeholder="" value=""
                                 [ngClass]="{'is-invalid' : isTelephoneInvalid, 'is-valid' : isTelephoneValid}">
                             <div class="invalid-feedback" *ngIf="isTelephoneInvalid">
                                 Teléfono inválido (entre 6 y 20 digitos, sólo números)
@@ -155,7 +155,7 @@
                         <div class="col-sm-6">
                             <label for="email" class="form-label">Email<span class="text-danger"> *</span>
                             </label>
-                            <input formControlName="email" type="email" class="form-control" id="email" required
+                            <input formControlName="email" type="email" class="form-control" id="email"
                                 placeholder="tu@email.com"
                                 [ngClass]="{'is-invalid' : isEmailInvalid, 'is-valid' : isEmailValid}">
                             <div class="invalid-feedback" *ngIf="isEmailInvalid">
@@ -167,7 +167,7 @@
                             <label for="password" class="form-label">Contraseña<span class="text-danger">
                                     *</span></label>
                             <input formControlName="password" type="password" class="form-control" id="password"
-                                placeholder="********" required
+                                placeholder="********"
                                 [ngClass]="{'is-invalid' : isPasswordInvalid, 'is-valid' : isPasswordValid}">
                             <div class="invalid-feedback" *ngIf="isPasswordInvalid">
                                 Contraseña inválida (al menos 8 caracteres)
@@ -178,7 +178,7 @@
                             <label for="confirm-password" class="form-label">Confirmar Contraseña<span
                                     class="text-danger"> *</span></label>
                             <input formControlName="confirmPassword" type="password" class="form-control"
-                                id="confirm-password" placeholder="********" required
+                                id="confirm-password" placeholder="********"
                                 [ngClass]="{'is-invalid' : isConfirmPasswordInvalid, 'is-valid' : isConfirmPasswordValid}">
                             <div class="invalid-feedback" *ngIf="isConfirmPasswordInvalid">
                                 Las contraseñas no coinciden

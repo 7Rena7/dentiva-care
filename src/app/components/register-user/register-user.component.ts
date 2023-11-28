@@ -36,8 +36,6 @@ export class RegisterUserComponent {
       Validators.pattern('^[0-9]*$'),
     ]),
     telephone: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
       Validators.maxLength(20),
       Validators.pattern('^[0-9]*$'),
     ]),
@@ -121,11 +119,12 @@ export class RegisterUserComponent {
     return (
       this.telephone?.dirty &&
       this.telephone?.invalid &&
-      this.telephone?.touched
+      this.telephone?.touched &&
+      this.telephone?.value !== ''
     );
   }
   get isTelephoneValid() {
-    return this.telephone?.valid;
+    return this.telephone?.valid && this.telephone?.value !== '';
   }
 
   get consultingRoomName() {
