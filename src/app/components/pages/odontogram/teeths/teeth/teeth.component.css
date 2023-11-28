@@ -1,0 +1,25 @@
+.teeth {
+  border-radius: 50%;
+  height: 55px;
+  width: 55px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.teeth:hover {
+  background-color: rgb(82, 148, 246);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.selected {
+  background-color: rgb(129, 178, 252);
+  transition: 0.3s;
+  border: #6e6e6e 2px solid;
+}
+
+.not-selected {
+  background-color: #bbb;
+  transition: 0.3s;
+}

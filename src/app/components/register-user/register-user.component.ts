@@ -8,7 +8,6 @@ import { Observable, catchError } from 'rxjs';
 @Component({
   selector: 'app-register-user',
   templateUrl: './register-user.component.html',
-  styleUrls: ['./register-user.component.css'],
 })
 export class RegisterUserComponent {
   registerForm = new FormGroup({
@@ -65,6 +64,7 @@ export class RegisterUserComponent {
       Validators.required,
       Validators.minLength(8),
     ]),
+    // @todo: figure out how validators work in Reactive Forms
     // Validators: [ confirmPasswordValidator ],
   });
 

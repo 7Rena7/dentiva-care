@@ -115,10 +115,4 @@ export class PatientsService {
     );
     return this.http.delete(url, { headers });
   }
-
-  getInterventions(query: string): Observable<any> {
-    return this.getQuery(`/interventions/${query}`).pipe(
-      map((resp: any) => resp.data)
-    );
-  }
 }
