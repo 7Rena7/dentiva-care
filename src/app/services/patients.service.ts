@@ -39,8 +39,45 @@ export class PatientsService {
     return this.getQuery(`/${uid}`).pipe(map((resp: any) => resp.data));
   }
 
-  registerPatient(data: FormGroup): Observable<any> {
+  registerPatient(data: FormGroup, profileImage?: File): Observable<any> {
     const { controls } = data;
+
+    console.log(controls);
+    // const formData = new FormData();
+    // formData.append('profileImage', profileImage || '');
+    // formData.set('firstName', controls['firstName'].value);
+    // formData.append('lastName', controls['lastName'].value);
+    // formData.append('dni', controls['dni'].value);
+    // formData.append('cuil', controls['cuil'].value);
+    // formData.append('dob', controls['dob'].value);
+    // formData.append('telephone', controls['telephone'].value);
+    // formData.append(
+    //   'address',
+    //   JSON.stringify({
+    //     province: controls['province'].value,
+    //     city: controls['city'].value,
+    //     street: controls['street'].value,
+    //     number: controls['number'].value,
+    //     department: controls['department'].value,
+    //   })
+    // );
+    // formData.append('medicalService', controls['medicalService'].value);
+    // formData.append(
+    //   'medicalServiceNumber',
+    //   controls['medicalServiceNumber'].value
+    // );
+    // formData.append('alergies', controls['alergies'].value);
+    // formData.append('diabetes', controls['diabetes'].value);
+    // formData.append('reumaticFiber', controls['reumaticFiber'].value);
+    // formData.append('epilepsy', controls['epilepsy'].value);
+    // formData.append('cardiopathy', controls['cardiopathy'].value);
+    // formData.append('hepatithis', controls['hepatithis'].value);
+    // formData.append('other', controls['other'].value);
+    // formData.append('otherIllnesses', controls['otherIllnesses'].value);
+    // formData.append('otherDetails', controls['otherDetails'].value);
+    // formData.append('generalApretiation', controls['generalApretiation'].value);
+
+    // console.log(formData);
 
     const body = {
       firstName: controls['firstName'].value,
@@ -68,6 +105,7 @@ export class PatientsService {
       otherIllnesses: controls['otherIllnesses'].value,
       otherDetails: controls['otherDetails'].value,
       generalApretiation: controls['generalApretiation'].value,
+      profileImage: profileImage || '',
     };
 
     return this.postQuery(body);

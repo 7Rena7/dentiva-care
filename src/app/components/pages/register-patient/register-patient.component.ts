@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
 import { formatDate } from 'src/app/helpers/formatDate';
+import { ImageService, ImageSnippet } from 'src/app/services/image.service';
 import { PatientsService } from 'src/app/services/patients.service';
 import { RegisterService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
@@ -14,45 +15,45 @@ import Swal from 'sweetalert2';
 })
 export class RegisterPatientComponent implements OnInit {
   registerForm = new FormGroup({
-    firstName: new FormControl('', [
+    firstName: new FormControl('Renato', [
       Validators.required,
       Validators.minLength(2),
       Validators.maxLength(50),
       Validators.pattern('^[a-zA-Z ]*$'),
     ]),
-    lastName: new FormControl('', [
+    lastName: new FormControl('Corbellini', [
       Validators.required,
       Validators.minLength(2),
       Validators.maxLength(50),
       Validators.pattern('^[a-zA-Z ]*$'),
     ]),
-    dni: new FormControl('', [
+    dni: new FormControl('12345433', [
       Validators.required,
       Validators.minLength(6),
       Validators.maxLength(8),
       Validators.pattern('^[0-9]*$'),
     ]),
-    cuil: new FormControl('', [
+    cuil: new FormControl('123454322', [
       Validators.required,
       Validators.minLength(9),
       Validators.maxLength(11),
       Validators.pattern('^[0-9]*$'),
     ]),
-    dob: new FormControl('', [Validators.minLength(10)]),
+    dob: new FormControl('05/03/2000', [Validators.minLength(10)]),
     telephone: new FormControl('', [
       Validators.minLength(6),
       Validators.maxLength(20),
       Validators.pattern('^[0-9]*$'),
     ]),
-    province: new FormControl('', [
+    province: new FormControl('Entre Ríos', [
       Validators.minLength(2),
       Validators.maxLength(100),
     ]),
-    city: new FormControl('', [
+    city: new FormControl('CONCEPCION DEL URUGUAY', [
       Validators.minLength(2),
       Validators.maxLength(100),
     ]),
-    street: new FormControl('', [
+    street: new FormControl('Artigas', [
       Validators.minLength(1),
       Validators.maxLength(100),
     ]),
@@ -65,7 +66,7 @@ export class RegisterPatientComponent implements OnInit {
       Validators.minLength(1),
       Validators.maxLength(10),
     ]),
-    medicalService: new FormControl('', [
+    medicalService: new FormControl('PARTICULAR', [
       Validators.required,
       Validators.minLength(2),
       Validators.maxLength(100),
@@ -296,10 +297,12 @@ export class RegisterPatientComponent implements OnInit {
   provinces$: Observable<any[]> | undefined;
   cities$: Observable<any[]> | undefined;
   patientId = '';
+  selectedFile: ImageSnippet | undefined;
 
   constructor(
     private patients: PatientsService,
     private register: RegisterService,
+    private imageService: ImageService,
     private route: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -409,66 +412,92 @@ export class RegisterPatientComponent implements OnInit {
 
     this.registerForm.controls.province.setValue(this.selectedProvinceName);
 
-    if (this.patientId) {
-      this.patients.updatePatient(this.patientId, this.registerForm).subscribe(
-        () => {
-          this.showLoader = false;
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Paciente actualizado con éxito',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          this.route.navigate(['/home']);
-        },
-        (err: any) => {
-          this.showLoader = false;
-          const errors = err.error.errors;
-          let message = '';
-          errors.forEach((error: any) => {
-            message += `${error.msg}`;
-          });
+    if (this.patientId) this.updatePatient();
+    else this.registerPatient();
+  }
 
-          Swal.fire({
-            icon: 'error',
-            title:
-              'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
-            text: `${message}`,
-          });
-          console.log(err);
-        }
-      );
-    } else {
-      this.patients.registerPatient(this.registerForm).subscribe(
-        () => {
-          this.showLoader = false;
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Paciente creado con éxito',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          this.route.navigate(['/home']);
-        },
-        (err: any) => {
-          this.showLoader = false;
-          const errors = err.error.errors;
-          let message = '';
-          errors.forEach((error: any) => {
-            message += `${error.msg}`;
-          });
+  private registerPatient() {
+    this.patients
+      .registerPatient(this.registerForm, this.selectedFile?.file)
+      .subscribe(() => {
+        this.showLoader = false;
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Paciente creado con éxito',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.route.navigate(['/home']);
+      }),
+      (err: any) => {
+        this.showLoader = false;
+        const errors = err.error.errors;
+        let message = '';
+        errors.forEach((error: any) => {
+          message += `${error.msg}`;
+        });
 
-          Swal.fire({
-            icon: 'error',
-            title:
-              'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
-            text: `${message}`,
-          });
-          console.log(err);
-        }
-      );
-    }
+        Swal.fire({
+          icon: 'error',
+          title:
+            'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
+          text: `${message}`,
+        });
+        console.log(err);
+      };
+  }
+
+  private updatePatient() {
+    this.patients.updatePatient(this.patientId, this.registerForm).subscribe(
+      () => {
+        this.showLoader = false;
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Paciente actualizado con éxito',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.route.navigate(['/home']);
+      },
+      (err: any) => {
+        this.showLoader = false;
+        const errors = err.error.errors;
+        let message = '';
+        errors.forEach((error: any) => {
+          message += `${error.msg}`;
+        });
+
+        Swal.fire({
+          icon: 'error',
+          title:
+            'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
+          text: `${message}`,
+        });
+        console.log(err);
+      }
+    );
+  }
+
+  processFile(imageInput: any) {
+    const file: File = imageInput.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+      this.selectedFile = new ImageSnippet(event.target.result, file);
+      console.log(this.selectedFile);
+      console.log(file);
+    });
+
+    reader.readAsDataURL(file);
+  }
+
+  removePhoto() {
+    this.selectedFile = undefined;
+    const fileElement = document.getElementById(
+      'upload-photo'
+    ) as HTMLInputElement;
+    if (fileElement) fileElement.value = '';
   }
 }
