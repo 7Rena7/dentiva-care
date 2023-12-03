@@ -1,4 +1,4 @@
-# DentivaCare
+# Dentiva Care
 
 Dentiva Care is an application designed for storing, managing, and monitoring patients within an odontological clinic. This repository contains the frontend interface where users interact with the system.
 
