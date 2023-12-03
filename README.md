@@ -12,28 +12,26 @@ To run the project locally:
 
 1. Ensure you have Node.js (18 or higher) and Angular/CLI (16 or higher) installed.
 2. Clone the repository to your local machine by executing the following command in your desired directory:
-
-```bash
-git clone https://github.com/7Rena7/dentiva-care.git
-```
+  ```bash
+  git clone https://github.com/7Rena7/dentiva-care.git
+  cd dentiva-care
+  ```
 
 3. Install the required npm packages:
-
-```bash
-npm install
-```
+  ```bash
+  npm install
+  ```
 
 4. Ensure the environment.ts file is appropriately configured to communicate with either the deployed server or your local server.
-```javascript
-// DEVELOPMENT API
-export const baseUrl = 'http://localhost:8080/api';
-
-// PRODUCTION API
-export const baseUrl = 'https://dentiva-care-api-c9a35adf00ce.herokuapp.com/api';
-```
+  ```javascript
+  // DEVELOPMENT API
+  export const baseUrl = 'http://localhost:8080/api';
+  
+  // PRODUCTION API
+  export const baseUrl = 'https://dentiva-care-api-c9a35adf00ce.herokuapp.com/api';
+  ```
 
 5. Serve the application using:
-
-```bash
-ng serve -o
-```
+  ```bash
+  ng serve -o
+  ```
