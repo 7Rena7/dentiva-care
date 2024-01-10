@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { RegisterService } from 'src/app/services/user.service';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
+
+import Swal from 'sweetalert2';
+
+import { UserService } from 'src/app/services/user.service';
+import { GeolocationService } from 'src/app/services/geolocation.service';
 
 @Component({
   selector: 'app-register-user',
@@ -43,6 +46,9 @@ export class RegisterUserComponent {
     consultingRoomTelephone: new FormControl('', [
       Validators.maxLength(20),
       Validators.pattern('^[0-9]*$'),
+    ]),
+    consultingRoomProvinceName: new FormControl('', [
+      Validators.maxLength(100),
     ]),
     consultingRoomProvince: new FormControl('', [Validators.maxLength(100)]),
     consultingRoomCity: new FormControl('', [Validators.maxLength(100)]),
@@ -295,12 +301,15 @@ export class RegisterUserComponent {
 
   showLoader = false;
   selectedProvinceId: string = '';
-  selectedProvinceName: string = '';
   provinces$: Observable<any[]>;
   cities$: Observable<any[]> | undefined;
 
-  constructor(public register: RegisterService, public route: Router) {
-    this.provinces$ = this.register.getProvinces().pipe(
+  constructor(
+    public register: UserService,
+    private geolocation: GeolocationService,
+    public route: Router
+  ) {
+    this.provinces$ = this.geolocation.getProvinces().pipe(
       catchError((error) => {
         console.error(error);
         throw new Error(error);
@@ -309,16 +318,22 @@ export class RegisterUserComponent {
   }
 
   onProvinceSelected(event: Event) {
-    this.selectedProvinceId = (event.target as HTMLSelectElement).value;
-    this.selectedProvinceName = (event.target as HTMLSelectElement).options[
-      (event.target as HTMLSelectElement).selectedIndex
-    ].text;
-    this.cities$ = this.register.getCities(this.selectedProvinceId).pipe(
-      catchError((error) => {
-        console.error(error);
-        throw new Error(error);
-      })
-    );
+    if (
+      !(this.selectedProvinceId === (event.target as HTMLSelectElement).value)
+    ) {
+      this.selectedProvinceId = (event.target as HTMLSelectElement).value;
+      this.registerForm.controls.consultingRoomProvinceName.setValue(
+        (event.target as HTMLSelectElement).options[
+          (event.target as HTMLSelectElement).selectedIndex
+        ].text.toLowerCase()
+      );
+      this.cities$ = this.geolocation.getCities(this.selectedProvinceId).pipe(
+        catchError((error) => {
+          console.error(error);
+          throw new Error(error);
+        })
+      );
+    }
   }
 
   registerUser() {
@@ -352,10 +367,6 @@ export class RegisterUserComponent {
     }
 
     this.showLoader = true;
-
-    this.registerForm.controls.consultingRoomProvince.setValue(
-      this.selectedProvinceName
-    );
 
     this.register.registerUser(this.registerForm).subscribe(
       () => {
