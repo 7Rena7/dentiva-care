@@ -95,7 +95,7 @@
                                 (change)="onProvinceSelected($event)">
                                 <option value="">Seleccione una opción...</option>
                                 <option *ngFor="let province of provinces$ | async; let i = index"
-                                    [value]="province.id">{{ province.nombre }}</option>
+                                    [value]="province.uid">{{ province.name | titlecase }}</option>
                             </select>
                             <div class="invalid-feedback" *ngIf="isProvinceInvalid">
                                 Seleccione una provincia
@@ -107,7 +107,8 @@
                             <select formControlName="city" class="form-select" id="city"
                                 [ngClass]="{'is-invalid' : isCityInvalid, 'is-valid': isCityValid}">
                                 <option value="">Seleccione una opción...</option>
-                                <option *ngFor="let city of cities$ | async">{{city.nombre}}</option>
+                                <option *ngFor="let city of cities$ | async" [value]="city.name">{{city.name |
+                                    titlecase}}</option>
                             </select>
                             <div class="invalid-feedback" *ngIf="isCityInvalid">
                                 Seleccione una ciudad
