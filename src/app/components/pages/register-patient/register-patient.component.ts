@@ -441,12 +441,34 @@ export class RegisterPatientComponent implements OnInit {
           this.route.navigate(['/home']);
         },
         (err: any) => {
+          console.log(err);
           this.showLoader = false;
-          const errors = err.error.errors;
+          // Check if error.status is 4XX
+          if (err.status >= 400 && err.status < 500) {
+            let errorMsg = '';
+            if (typeof err.error === 'string') {
+              errorMsg += `${err.error}`;
+            } else if (err.error.msg !== null) {
+              errorMsg += `${err.error.msg}`;
+            }
+
+            Swal.fire({
+              icon: 'error',
+              title: errorMsg,
+              showConfirmButton: true,
+            });
+            return;
+          }
+
           let message = '';
-          errors.forEach((error: any) => {
-            message += `${error.msg}`;
-          });
+          if (err.error.errors) {
+            const errors = err.error.errors;
+            errors.forEach((error: any) => {
+              message += `${error.msg}`;
+            });
+          } else {
+            message += `${err.error.msg}`;
+          }
 
           Swal.fire({
             icon: 'error',
@@ -454,7 +476,6 @@ export class RegisterPatientComponent implements OnInit {
               'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
             text: `${message}`,
           });
-          console.log(err);
         }
       );
     } else {

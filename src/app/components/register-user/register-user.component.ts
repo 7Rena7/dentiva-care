@@ -371,21 +371,45 @@ export class RegisterUserComponent {
     this.register.registerUser(this.registerForm).subscribe(
       () => {
         this.showLoader = false;
-        Swal.fire({ icon: 'success', title: 'Usuario Creado' }).then(
-          (result) => {
-            if (result.isConfirmed) {
-              this.route.navigate(['/login']);
-            }
+        Swal.fire({
+          icon: 'success',
+          title: 'Usuario creado',
+          text: 'Revise su casilla de correo para confirmar su email. (Asegurese de revisar su casilla de spam)',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.route.navigate(['/login']);
           }
-        );
+        });
       },
       (err) => {
+        console.log(err);
         this.showLoader = false;
-        const errors = err.error.errors;
+        // Check if error.status is 4XX
+        if (err.status >= 400 && err.status < 500) {
+          let errorMsg = '';
+          if (typeof err.error === 'string') {
+            errorMsg += `${err.error}`;
+          } else if (err.error.msg !== null) {
+            errorMsg += `${err.error.msg}`;
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: errorMsg,
+            showConfirmButton: true,
+          });
+          return;
+        }
+
         let message = '';
-        errors.forEach((error: any) => {
-          message += `${error.msg}`;
-        });
+        if (err.error.errors) {
+          const errors = err.error.errors;
+          errors.forEach((error: any) => {
+            message += `${error.msg}`;
+          });
+        } else {
+          message += `${err.error.msg}`;
+        }
 
         Swal.fire({
           icon: 'error',
@@ -393,7 +417,6 @@ export class RegisterUserComponent {
             'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
           text: `${message}`,
         });
-        console.log(err);
       }
     );
   }

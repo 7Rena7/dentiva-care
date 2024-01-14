@@ -54,4 +54,9 @@ export class UserService {
 
     return this.http.post(url, body);
   }
+
+  confirmUser(activateToken: string): Observable<any> {
+    const url = baseUrl + `/users/activate/${activateToken}`;
+    return this.http.get(url).pipe(map((resp: any) => resp));
+  }
 }

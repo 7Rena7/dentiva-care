@@ -217,14 +217,35 @@ export class CreateInterventionComponent {
           });
           this.route.navigate(['/odontogram', this.patientId]);
         },
-        (error) => {
+        (err) => {
+          console.log(err);
           this.showLoader = false;
+          // Check if error.status is 4XX
+          if (err.status >= 400 && err.status < 500) {
+            let errorMsg = '';
+            if (typeof err.error === 'string') {
+              errorMsg += `${err.error}`;
+            } else if (err.error.msg !== null) {
+              errorMsg += `${err.error.msg}`;
+            }
 
-          const errors = error.error.errors;
+            Swal.fire({
+              icon: 'error',
+              title: errorMsg,
+              showConfirmButton: true,
+            });
+            return;
+          }
+
           let message = '';
-          errors.forEach((err: any) => {
-            message += `${err.msg}`;
-          });
+          if (err.error.errors) {
+            const errors = err.error.errors;
+            errors.forEach((error: any) => {
+              message += `${error.msg}`;
+            });
+          } else {
+            message += `${err.error.msg}`;
+          }
 
           Swal.fire({
             icon: 'error',
@@ -232,8 +253,6 @@ export class CreateInterventionComponent {
               'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
             text: `${message}`,
           });
-
-          console.error(error);
         }
       );
   }
