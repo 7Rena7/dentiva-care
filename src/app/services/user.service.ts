@@ -7,7 +7,7 @@ import { baseUrl } from 'src/env/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class RegisterService {
+export class UserService {
   constructor(private http: HttpClient) {}
 
   registerUser(data: FormGroup): Observable<any> {
@@ -34,9 +34,16 @@ export class RegisterService {
       password: controls['password'].value,
     };
 
-    if (controls['consultingRoomStreet'].value !== '') {
+    if (
+      controls['consultingRoomProvinceName'].value ||
+      controls['consultingRoomCity'].value ||
+      controls['consultingRoomPostalCode'].value ||
+      controls['consultingRoomStreet'].value ||
+      controls['consultingRoomNumber'].value ||
+      controls['consultingRoomDepartment'].value
+    ) {
       body.consultingRoomAddress = {
-        consultingRoomProvince: controls['consultingRoomProvince'].value,
+        consultingRoomProvince: controls['consultingRoomProvinceName'].value,
         consultingRoomCity: controls['consultingRoomCity'].value,
         consultingRoomPostalCode: controls['consultingRoomPostalCode'].value,
         consultingRoomStreet: controls['consultingRoomStreet'].value,
@@ -48,28 +55,8 @@ export class RegisterService {
     return this.http.post(url, body);
   }
 
-  getProvinces(): Observable<any> {
-    const url =
-      'https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre';
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        const provinces = resp.provincias;
-        return provinces.sort((a: any, b: any) =>
-          a.nombre.localeCompare(b.nombre)
-        );
-      })
-    );
-  }
-
-  getCities(provinceId: string): Observable<any> {
-    const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinceId}&campos=id,nombre&max=200`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        const cities = resp.localidades;
-        return cities.sort((a: any, b: any) =>
-          a.nombre.localeCompare(b.nombre)
-        );
-      })
-    );
+  confirmUser(activateToken: string): Observable<any> {
+    const url = baseUrl + `/users/activate/${activateToken}`;
+    return this.http.get(url).pipe(map((resp: any) => resp));
   }
 }

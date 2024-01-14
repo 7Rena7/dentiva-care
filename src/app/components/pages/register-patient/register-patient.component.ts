@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, catchError } from 'rxjs';
-import { formatDate } from 'src/app/helpers/formatDate';
-import { PatientsService } from 'src/app/services/patients.service';
-import { RegisterService } from 'src/app/services/user.service';
+import { Observable, catchError, map, tap } from 'rxjs';
+
 import Swal from 'sweetalert2';
+
+import { formatDate } from 'src/app/helpers/formatDate';
+import { GeolocationService } from 'src/app/services/geolocation.service';
+import { PatientsService } from 'src/app/services/patients.service';
+import { titleCase } from 'src/app/helpers/formatStrings';
 
 @Component({
   selector: 'app-register-patient',
@@ -48,6 +51,7 @@ export class RegisterPatientComponent implements OnInit {
       Validators.minLength(2),
       Validators.maxLength(100),
     ]),
+    provinceName: new FormControl('', [Validators.maxLength(100)]),
     city: new FormControl('', [
       Validators.minLength(2),
       Validators.maxLength(100),
@@ -292,14 +296,13 @@ export class RegisterPatientComponent implements OnInit {
   showLoader = false;
   patientInfoLoading = false;
   selectedProvinceId: string = '';
-  selectedProvinceName: string = '';
   provinces$: Observable<any[]> | undefined;
   cities$: Observable<any[]> | undefined;
   patientId = '';
 
   constructor(
     private patients: PatientsService,
-    private register: RegisterService,
+    private geolocation: GeolocationService,
     private route: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -312,7 +315,12 @@ export class RegisterPatientComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.provinces$ = this.register.getProvinces().pipe(
+    let provincesArray: any[] = [];
+    this.provinces$ = this.geolocation.getProvinces().pipe(
+      tap((provinces) => {
+        provincesArray = provinces;
+        return provinces;
+      }),
       catchError((error) => {
         console.error(error);
         throw new Error(error);
@@ -333,8 +341,14 @@ export class RegisterPatientComponent implements OnInit {
         this.registerForm.controls.cuil.setValue(patient.cuil);
         this.registerForm.controls.dob.setValue(formatDate(patient.dob));
         this.registerForm.controls.telephone.setValue(patient.telephone);
-        this.registerForm.controls.province.setValue(patient.address.province);
-        this.registerForm.controls.city.setValue(patient.address.city);
+        // Match province id with province name
+        const province = provincesArray.find(
+          (province) => province.name === patient.address.province
+        );
+        this.registerForm.controls.province.setValue(province.uid);
+        this.registerForm.controls.city.setValue(
+          titleCase(patient.address.city)
+        );
         this.registerForm.controls.street.setValue(patient.address.street);
         this.registerForm.controls.number.setValue(patient.address.number);
         this.registerForm.controls.department.setValue(
@@ -367,16 +381,22 @@ export class RegisterPatientComponent implements OnInit {
   }
 
   onProvinceSelected(event: Event) {
-    this.selectedProvinceId = (event.target as HTMLSelectElement).value;
-    this.selectedProvinceName = (event.target as HTMLSelectElement).options[
-      (event.target as HTMLSelectElement).selectedIndex
-    ].text;
-    this.cities$ = this.register.getCities(this.selectedProvinceId).pipe(
-      catchError((error) => {
-        console.error(error);
-        throw new Error(error);
-      })
-    );
+    if (
+      !(this.selectedProvinceId === (event.target as HTMLSelectElement).value)
+    ) {
+      this.selectedProvinceId = (event.target as HTMLSelectElement).value;
+      this.registerForm.controls.provinceName.setValue(
+        (event.target as HTMLSelectElement).options[
+          (event.target as HTMLSelectElement).selectedIndex
+        ].text.toLowerCase()
+      );
+      this.cities$ = this.geolocation.getCities(this.selectedProvinceId).pipe(
+        catchError((error) => {
+          console.error(error);
+          throw new Error(error);
+        })
+      );
+    }
   }
 
   registerUpdatePatient() {
@@ -407,8 +427,6 @@ export class RegisterPatientComponent implements OnInit {
 
     this.showLoader = true;
 
-    this.registerForm.controls.province.setValue(this.selectedProvinceName);
-
     if (this.patientId) {
       this.patients.updatePatient(this.patientId, this.registerForm).subscribe(
         () => {
@@ -423,12 +441,34 @@ export class RegisterPatientComponent implements OnInit {
           this.route.navigate(['/home']);
         },
         (err: any) => {
+          console.log(err);
           this.showLoader = false;
-          const errors = err.error.errors;
+          // Check if error.status is 4XX
+          if (err.status >= 400 && err.status < 500) {
+            let errorMsg = '';
+            if (typeof err.error === 'string') {
+              errorMsg += `${err.error}`;
+            } else if (err.error.msg !== null) {
+              errorMsg += `${err.error.msg}`;
+            }
+
+            Swal.fire({
+              icon: 'error',
+              title: errorMsg,
+              showConfirmButton: true,
+            });
+            return;
+          }
+
           let message = '';
-          errors.forEach((error: any) => {
-            message += `${error.msg}`;
-          });
+          if (err.error.errors) {
+            const errors = err.error.errors;
+            errors.forEach((error: any) => {
+              message += `${error.msg}`;
+            });
+          } else {
+            message += `${err.error.msg}`;
+          }
 
           Swal.fire({
             icon: 'error',
@@ -436,7 +476,6 @@ export class RegisterPatientComponent implements OnInit {
               'Ha ocurrido un error, copie el mensaje inferior y envíelo a los administradores del sistema',
             text: `${message}`,
           });
-          console.log(err);
         }
       );
     } else {

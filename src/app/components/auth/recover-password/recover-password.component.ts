@@ -51,6 +51,23 @@ export class RecoverPasswordComponent {
       (err) => {
         console.log(err);
         this.showLoader = false;
+        // Check if error.status is 4XX
+        if (err.status >= 400 && err.status < 500) {
+          let errorMsg = '';
+          if (typeof err.error === 'string') {
+            errorMsg += `${err.error}`;
+          } else if (err.error.msg !== null) {
+            errorMsg += `${err.error.msg}`;
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: errorMsg,
+            showConfirmButton: true,
+          });
+          return;
+        }
+
         let message = '';
         if (err.error.errors) {
           const errors = err.error.errors;

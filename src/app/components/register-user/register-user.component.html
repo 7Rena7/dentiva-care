@@ -95,9 +95,9 @@
                             <select formControlName="consultingRoomProvince" class="form-select"
                                 id="consulting-room-province" [ngClass]="{'is-valid' : isConsultingRoomProvinceValid}"
                                 (change)="onProvinceSelected($event)">
-                                <option value="">Seleccione una opción...</option>
+                                <option value="" selected>Seleccione una opción...</option>
                                 <option *ngFor="let province of provinces$ | async; let i = index"
-                                    [value]="province.id">{{ province.nombre }}</option>
+                                    [value]="province.uid">{{ province.name | titlecase }}</option>
                             </select>
                         </div>
 
@@ -106,7 +106,8 @@
                             <select formControlName="consultingRoomCity" class="form-select" id="consulting-room-city"
                                 [ngClass]="{'is-valid': isConsultingRoomCityValid}">
                                 <option value="">Seleccione una opción...</option>
-                                <option *ngFor="let city of cities$ | async">{{city.nombre}}</option>
+                                <option *ngFor="let city of cities$ | async" [value]="city.name">{{city.name |
+                                    titlecase }}</option>
                             </select>
                         </div>
 
