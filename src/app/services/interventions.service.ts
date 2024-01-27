@@ -39,7 +39,7 @@ export class InterventionsService {
   }
 
   getInterventions(patientId: string, teethNumber?: number): Observable<any> {
-    return this.getQuery(`/${patientId}`).pipe(
+    return this.getQuery(`/${patientId}?from=0&limit=50`).pipe(
       map((resp: any) => {
         if (teethNumber) {
           resp.data.interventions = resp.data.interventions.filter(
