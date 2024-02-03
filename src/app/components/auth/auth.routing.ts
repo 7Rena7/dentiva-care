@@ -24,6 +24,10 @@ const routes: Routes = [
     component: RestorePasswordComponent,
     canActivate: [RestorePasswordGuard],
   },
+  {
+    path: 'activate/:activateToken',
+    component: LoginComponent,
+  },
 ];
 
 @NgModule({

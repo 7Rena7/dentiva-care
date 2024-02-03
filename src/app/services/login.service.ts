@@ -58,7 +58,7 @@ export class LoginService {
     const token = localStorage.getItem('restoreToken') || '';
     const body = {
       password: data.controls['password'].value,
-      passwordConfirm: data.controls['confirmPassword'].value,
+      confirmPassword: data.controls['confirmPassword'].value,
     };
     const headers = new HttpHeaders().set('token', token);
     return this.http.post(url, body, { headers }).pipe(

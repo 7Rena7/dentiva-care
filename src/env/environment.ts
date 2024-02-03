@@ -4,4 +4,4 @@ export const environment = {
 
 // export const baseUrl = 'http://localhost:8080/api';
 export const baseUrl =
-  'https://dentiva-care-api-c9a35adf00ce.herokuapp.com/api';
+  'https://odontogram-api-5688f29f9751.herokuapp.com/api';

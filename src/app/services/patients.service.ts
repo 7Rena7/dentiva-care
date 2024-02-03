@@ -30,7 +30,7 @@ export class PatientsService {
   }
 
   getPatients(query: string): Observable<PatientsResponse> {
-    return this.getQuery(`?search=${query}`).pipe(
+    return this.getQuery(`?search=${query}&from=0&limit=50`).pipe(
       map((resp: any) => resp.data)
     );
   }
@@ -50,7 +50,7 @@ export class PatientsService {
       dob: controls['dob'].value,
       telephone: controls['telephone'].value,
       address: {
-        province: controls['province'].value,
+        province: controls['provinceName'].value,
         city: controls['city'].value,
         street: controls['street'].value,
         number: controls['number'].value,
@@ -79,7 +79,7 @@ export class PatientsService {
     const body = {
       telephone: controls['telephone'].value,
       address: {
-        province: controls['province'].value,
+        province: controls['provinceName'].value,
         city: controls['city'].value,
         street: controls['street'].value,
         number: controls['number'].value,
